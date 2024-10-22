@@ -1,0 +1,11 @@
+-- CreateTable
+CREATE TABLE `AppData` (
+    `UUID_AD` VARCHAR(191) NOT NULL,
+    `Version_AD` VARCHAR(191) NOT NULL,
+    `Description_AD` VARCHAR(191) NOT NULL,
+    `UpdatedAt_AD` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `CreatedAt_AD` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    UNIQUE INDEX `AppData_Version_AD_key`(`Version_AD`),
+    PRIMARY KEY (`UUID_AD`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

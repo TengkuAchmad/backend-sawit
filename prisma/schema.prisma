@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Roles {
+  USER
+  ADMIN
+  SUPERADMIN
+}
+
+model UserData {
+  UUID_UD         String    @id @default(uuid())
+  Name_UD         String
+  Email_UD        String
+  Password_UD     String
+  Role_UD         Roles
+  LoggedAt_UD     DateTime?
+  UpdatedAt_UD    DateTime  @default(now())
+  CreatedAt_UD    DateTime  @default(now()) 
+  WorkspaceData   WorkspaceData[]
+}
+
+model AppData {
+  UUID_AD         String    @id @default(uuid())
+  Version_AD      String    @unique
+  Description_AD  String    @db.Text
+  Url_AD          String    @db.Text
+  UpdatedAt_AD    DateTime  @default(now())
+  CreatedAt_AD    DateTime  @default(now())
+}
+
+model WorkspaceData {
+  UUID_WD         String    @id @default(uuid())
+  UserData        UserData  @relation(fields: [UUID_UD], references: [UUID_UD], onDelete: NoAction, onUpdate: NoAction)
+  UUID_UD         String
+  Name_WD         String
+  UpdatedAt_WD    DateTime @default(now())
+  CreatedAt_WD    DateTime @default(now())
+}
+
+model ModelData {
+  UUID_MD         String    @id @default(uuid())
+  Name_MD         String
+  Url_MD          String    @db.Text
+  UpdatedAt_MD    DateTime  @default(now())
+  CreatedAt_MD    DateTime  @default(now())
+  ResultData      ResultData[]
+}
+
+model ResultData {
+  UUID_RD         String    @id @default(uuid())
+  ModelData       ModelData @relation(fields: [UUID_MD], references: [UUID_MD], onDelete: NoAction, onUpdate: NoAction)
+  UUID_MD         String
+  Result_RD       String    @db.Text
+  Latitude_RD     String
+  Longitude_RD    String
+  Photo_RD        String    @db.Text
+}
+
