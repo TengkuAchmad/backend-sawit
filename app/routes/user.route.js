@@ -12,6 +12,8 @@ router.post("/user-management/auth", user_controllers.auth);
 
 router.post("/user-management/register", user_controllers.register);
 
+router.post("/user-management/get/email", user_controllers.getByEmail);
+
 router.get("/user-management/get/all", authenticateToken, user_controllers.getAll);
 
 router.get("/user-management/get/:id", authenticateToken, user_controllers.getOne);

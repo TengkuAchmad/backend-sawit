@@ -135,6 +135,26 @@ exports.getOne = async (req, res) => {
    }
 }
 
+exports.getByEmail = async (req, res) => {
+   try {
+      if (req.body.email) {
+         const data = await prisma.userData.findMany({
+            where: {
+               Email_UD: req.body.email,
+            }
+         });
+
+         if (data.length > 0) {
+            return successResponse(res, "Email is already registered!");
+         } else {
+            return notFoundResponse(res, "Email is not registered yet!");
+         }
+      }
+   } catch (e) {
+      return badRequestResponse(res, "Internal Server Error", e.message);
+   }
+}
+
 exports.deleteAll = async (req, res) => {
    try {
       await prisma.userData.deleteMany({});
