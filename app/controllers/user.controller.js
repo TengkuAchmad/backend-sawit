@@ -145,9 +145,9 @@ exports.getByEmail = async (req, res) => {
          });
 
          if (data.length > 0) {
-            return successResponse(res, "Email is already registered!");
+            return successResponse(res, "registered");
          } else {
-            return notFoundResponse(res, "Email is not registered yet!");
+            return successResponse(res, "unregistered");
          }
       }
    } catch (e) {
