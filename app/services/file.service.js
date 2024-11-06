@@ -17,7 +17,7 @@ exports.upload = async (category, file) => {
 
       const storage = getStorage();
 
-      const storageRef = ref(storage, `${category}/${uuidv4()}.png`);
+      const storageRef = ref(storage, `${category}/${uuidv4()}.keras`);
 
       const snapshot = await uploadBytes(storageRef, fileContent.buffer);
 

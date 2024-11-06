@@ -6,7 +6,7 @@ const admin             = require('firebase-admin');
 const { initializeApp } = require("firebase/app");
 
 // SERVICE ACCOUNT KEY
-const serviceAccount    = require("../../credentials/eseuramoue-firebase-adminsdk-6ox0g-01946cdf51.json");
+const serviceAccount    = require("../../credentials/certificate-firebase.json");
 
 // CONSTANTS
 const { BUCKET_URL } = process.env;

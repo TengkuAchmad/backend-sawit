@@ -1,4 +1,4 @@
-// ENVIRONTMENTS
+// ENVIRONMENTS
 require('dotenv').config();
 
 // LIBRARIES
@@ -14,6 +14,14 @@ const prisma               = new PrismaClient();
 // SERVICES
 const file_services        = require("../services/file.service.js");
 const { getLocalTime }     = require("../services/time.service.js");
+
+exports.create = async (req, res) => {
+   try {
+
+   } catch (e) {
+      return badRequestResponse(res, "Internal Server Error", e.message);
+   }
+}
 
 exports.getScan = async (req, res) => {
    try {

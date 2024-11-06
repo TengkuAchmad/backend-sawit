@@ -1,17 +1,14 @@
-// LIBRARIES
 const { initializeApp } = require("firebase/app")
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB7wEc1tZUSjzUeeX5eIjdUVcjO9pWRyGU",
-  authDomain: "eseuramoue.firebaseapp.com",
-  databaseURL: "https://eseuramoue-default-rtdb.asia-southeast1.firebasedatabase.app/",
-  projectId: "eseuramoue",
-  storageBucket: "eseuramoue.appspot.com",
-  messagingSenderId: "149334571123",
-  appId: "1:149334571123:web:f7313af1776ff56835d206",
-  measurementId: "G-48N6775PDP"
+  apiKey: "AIzaSyBfrdfJ6pfQysYYvFy4wA3kujCCvZa580Q",
+  authDomain: "prof-d1cc3.firebaseapp.com",
+  projectId: "prof-d1cc3",
+  storageBucket: "prof-d1cc3.appspot.com",
+  messagingSenderId: "407306171924",
+  appId: "1:407306171924:web:b47360b285c7330e865901"
 };
 
-const app = initializeApp(firebaseConfig)
+const app = initializeApp(firebaseConfig);
 
 exports.default = app

@@ -1,4 +1,4 @@
-// ENVIRONTMENTS
+// ENVIRONMENTS
 require('dotenv').config();
 
 // LIBRARIES

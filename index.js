@@ -34,8 +34,9 @@ const app_routes = require("./app/routes/app.route.js");
 const user_routes = require("./app/routes/user.route.js");
 const model_routes = require("./app/routes/model.route.js");
 const scan_routes = require("./app/routes/scan.route.js");
+const result_routes = require("./app/routes/result.route");
 
-const endpoints  = [ app_routes, user_routes, model_routes, scan_routes ];
+const endpoints  = [ app_routes, user_routes, model_routes, scan_routes, result_routes ];
 
 app.use(endpoints);
 

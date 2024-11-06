@@ -14,51 +14,114 @@ enum Roles {
 }
 
 model UserData {
-  UUID_UD         String    @id @default(uuid())
-  Name_UD         String
-  Email_UD        String
-  Password_UD     String
-  Role_UD         Roles
-  LoggedAt_UD     DateTime?
-  UpdatedAt_UD    DateTime  @default(now())
-  CreatedAt_UD    DateTime  @default(now()) 
-  WorkspaceData   WorkspaceData[]
+  UUID_UD       String          @id @default(uuid())
+  Name_UD       String
+  Email_UD      String
+  Password_UD   String
+  Role_UD       Roles
+  PhotoUrl_UD   String          @db.Text
+  LoggedAt_UD   DateTime?
+  UpdatedAt_UD  DateTime        @default(now())
+  CreatedAt_UD  DateTime        @default(now())
+  WorkspaceData WorkspaceData[]
 }
 
 model AppData {
-  UUID_AD         String    @id @default(uuid())
-  Version_AD      String    @unique
-  Description_AD  String    @db.Text
-  Url_AD          String    @db.Text
-  UpdatedAt_AD    DateTime  @default(now())
-  CreatedAt_AD    DateTime  @default(now())
+  UUID_AD        String   @id @default(uuid())
+  Version_AD     String   @unique
+  Description_AD String   @db.Text
+  Url_AD         String   @db.Text
+  UpdatedAt_AD   DateTime @default(now())
+  CreatedAt_AD   DateTime @default(now())
 }
 
 model WorkspaceData {
-  UUID_WD         String    @id @default(uuid())
-  UserData        UserData  @relation(fields: [UUID_UD], references: [UUID_UD], onDelete: NoAction, onUpdate: NoAction)
-  UUID_UD         String
-  Name_WD         String
-  UpdatedAt_WD    DateTime @default(now())
-  CreatedAt_WD    DateTime @default(now())
+  UUID_WD      String   @id @default(uuid())
+  UserData     UserData @relation(fields: [UUID_UD], references: [UUID_UD], onDelete: NoAction, onUpdate: NoAction)
+  UUID_UD      String
+  Name_WD      String
+  UpdatedAt_WD DateTime @default(now())
+  CreatedAt_WD DateTime @default(now())
 }
 
 model ModelData {
-  UUID_MD         String    @id @default(uuid())
-  Name_MD         String
-  Url_MD          String    @db.Text
-  UpdatedAt_MD    DateTime  @default(now())
-  CreatedAt_MD    DateTime  @default(now())
-  ResultData      ResultData[]
+  UUID_MD      String       @id @default(uuid())
+  Name_MD      String
+  Url_MD       String       @db.Text
+  UpdatedAt_MD DateTime     @default(now())
+  CreatedAt_MD DateTime     @default(now())
+  ResultData   ResultData[]
 }
 
 model ResultData {
-  UUID_RD         String    @id @default(uuid())
-  ModelData       ModelData @relation(fields: [UUID_MD], references: [UUID_MD], onDelete: NoAction, onUpdate: NoAction)
-  UUID_MD         String
-  Result_RD       String    @db.Text
-  Latitude_RD     String
-  Longitude_RD    String
-  Photo_RD        String    @db.Text
+  UUID_RD     String      @id @default(uuid())
+  ModelData   ModelData   @relation(fields: [UUID_MD], references: [UUID_MD], onDelete: NoAction, onUpdate: NoAction)
+  UUID_MD     String
+  ResultIndex ResultIndex @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
+  UUID_RI     String
+  Photo_RD    String      @db.Text
 }
 
+model ResultIndex {
+  UUID_RI                String                 @id @default(uuid())
+  SocialResultIndex      SocialResultIndex      @relation(fields: [UUID_SRI], references: [UUID_SRI], onDelete: NoAction, onUpdate: NoAction)
+  UUID_SRI               String
+  SoilResultIndex        SoilResultIndex        @relation(fields: [UUID_SORI], references: [UUID_SORI], onDelete: NoAction, onUpdate: NoAction)
+  UUID_SORI              String
+  PalmResultIndex        PalmResultIndex        @relation(fields: [UUID_PRI], references: [UUID_PRI], onDelete: NoAction, onUpdate: NoAction)
+  UUID_PRI               String
+  TransmittanResultIndex TransmittanResultIndex @relation(fields: [UUID_TRI], references: [UUID_TRI], onDelete: NoAction, onUpdate: NoAction)
+  UUID_TRI               String
+  GelombangResultIndex   GelombangResultIndex   @relation(fields: [UUID_GRI], references: [UUID_GRI], onDelete: NoAction, onUpdate: NoAction)
+  UUID_GRI               String
+  Title_RI               String                 @unique
+  CreatedAt_RI           DateTime               @default(now())
+  UpdatedAt_RI           DateTime               @default(now())
+  ResultData             ResultData[]
+}
+
+model SocialResultIndex {
+  UUID_SRI      String        @id @default(uuid())
+  Longitude_SRI Float
+  Latitude_SRI  Float
+  Kabupaten_SRI String
+  Desa_SRI      String
+  Kecamatan_SRI String
+  ResultIndex   ResultIndex[]
+}
+
+model SoilResultIndex {
+  UUID_SORI        String        @id @default(uuid())
+  Umur_SORI        String
+  Lereng_SORI      String
+  Drainase_SORI    String
+  Genangan_SORI    String
+  Topografi_SORI   String
+  BahayaErosi_SORI String
+  BatuanPer_SORI   String
+  BatuanSin_SORI   String
+  Ketinggian_SORI  String
+  ResultIndex      ResultIndex[]
+}
+
+model PalmResultIndex {
+  UUID_PRI     String        @id @default(uuid())
+  ALB_PRI      Float
+  Rendemen_PRI Float
+  Densitas_PRI Float
+  ResultIndex  ResultIndex[]
+}
+
+model TransmittanResultIndex {
+  UUID_TRI    String        @id @default(uuid())
+  Min_TRI     Float
+  Max_TRI     Float
+  ResultIndex ResultIndex[]
+}
+
+model GelombangResultIndex {
+  UUID_GRI    String        @id @default(uuid())
+  Min_GRI     Float
+  Max_GRI     Float
+  ResultIndex ResultIndex[]
+}

@@ -1,4 +1,4 @@
-// ENVIRONTMENTS
+// ENVIRONMENTS
 require('dotenv').config();
 
 // LIBRARIES
@@ -15,7 +15,7 @@ const prisma               = new PrismaClient();
 const file_services        = require("../services/file.service.js");
 const { getLocalTime }     = require("../services/time.service.js");
 
-// ESSENSTIALS FUNCTION
+// ESSENTIALS FUNCTION
 
 exports.create = async (req, res) => {
    try {
@@ -27,7 +27,7 @@ exports.create = async (req, res) => {
          return badRequestResponse(res, "Please provide all the required fields!");
       }
 
-      const fileUrl = await file_services.upload("model", model);
+      const fileUrl = await file_services.upload("eseuramoe/models", model);
 
       await prisma.modelData.create({
          data: {

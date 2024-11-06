@@ -1,4 +1,4 @@
-// ENVIRONTMENTS
+// ENVIRONMENTS
 require('dotenv').config();
 
 // LIBRARIES
@@ -56,7 +56,8 @@ exports.auth = async (req, res) => {
                id: user.UUID_UD,
                name: user.Name_UD,
                email: user.Email_UD,
-               role: user.Role_UD
+               role: user.Role_UD,
+               photo: user.PhotoUrl_UD,
             }, 
             token: accessToken,
          });
@@ -74,6 +75,12 @@ exports.register = async (req, res) => {
          return errorResponse(res, "Please provide all fields!");
       }
 
+      let photo = "default";
+
+      if (req.body.photo) {
+         photo = req.body.photo;
+      }
+
       const hashedPassword = await argon2.hash(req.body.password);
 
       await prisma.userData.create({
@@ -82,6 +89,7 @@ exports.register = async (req, res) => {
             Email_UD: req.body.email,
             Password_UD: hashedPassword,
             Role_UD: "USER",
+            PhotoUrl_UD: photo,
             UpdatedAt_UD: getLocalTime(new Date()),
             CreatedAt_UD: getLocalTime(new Date()),
          }
@@ -104,6 +112,7 @@ exports.getAll = async (req, res) => {
             UUID_UD: true,
             Name_UD: true,
             Email_UD: true,
+            PhotoUrl_UD: true,
          }
       });
 
@@ -126,6 +135,7 @@ exports.getOne = async (req, res) => {
             Name_UD: true,
             Email_UD: true,
             Role_UD: true,
+            PhotoUrl_UD: true,
          }
       });
 
