@@ -40,7 +40,7 @@ exports.auth = async (req, res) => {
       }
 
       if (await argon2.verify(user.Password_UD, req.body.password)) {
-         const accessToken = jwt.sign({ userID: user.UUID_UD }, JWT_SECRET, { expiresIn: '1d' });
+         const accessToken = jwt.sign({ userID: user.UUID_UD }, JWT_SECRET);
 
          await prisma.userData.update({
             where: {
