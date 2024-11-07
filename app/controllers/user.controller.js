@@ -20,6 +20,7 @@ const prisma               = new PrismaClient();
 // SERVICES
 const { getLocalTime }     = require("../services/time.service.js");
 const { send }             = require("../services/smtp.service.js");
+const file_services = require("../services/file.service");
 
 
 // CONTROLLERS
@@ -195,16 +196,24 @@ exports.updateOne = async (req, res) => {
    try {
       const { id } = req.params;
 
-      const updateUser = Object.keys(req.body).reduce((acc, key) => {
-         acc[key] = req.body[key];
-         return acc;
-      }, {});
+      const {name} = req.body;
+
+      const image = req.files;
+
+      if (!name || !image) {
+         return badRequestResponse(res, "Please provide all fields required!");
+      }
+
+      const fileUrl = await file_services.upload("eseuramoe/avatars", "png", image);
 
       await prisma.userData.update({
          where: {
             UUID_UD: id,
-         }, data: 
-         updateUser,
+         }, data: {
+            Name_UD: name,
+            PhotoUrl_UD: fileUrl,
+            UpdatedAt_UD: getLocalTime(new Date()),
+         }
       });
 
       return successResponse(res, "User data updated successfully!");

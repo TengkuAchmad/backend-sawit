@@ -27,7 +27,7 @@ exports.create = async (req, res) => {
          return badRequestResponse(res, "Please provide all the required fields!");
       }
 
-      const fileUrl = await file_services.upload("eseuramoe/models", model);
+      const fileUrl = await file_services.upload("eseuramoe/models", "keras", model);
 
       await prisma.modelData.create({
          data: {

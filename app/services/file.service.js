@@ -7,7 +7,7 @@ const { uploadBytes }      = require("firebase/storage");
 const { getDownloadURL }   = require("firebase/storage");
 
 // ESSENTIALS
-exports.upload = async (category, file) => {
+exports.upload = async (category, type, file) => {
    try {
       if (!file?.length) {
          throw new Error("Invalid file!");
@@ -17,7 +17,7 @@ exports.upload = async (category, file) => {
 
       const storage = getStorage();
 
-      const storageRef = ref(storage, `${category}/${uuidv4()}.keras`);
+      const storageRef = ref(storage, `${category}/${uuidv4()}.${type}`);
 
       const snapshot = await uploadBytes(storageRef, fileContent.buffer);
 
