@@ -204,6 +204,14 @@ exports.updateOne = async (req, res) => {
          return badRequestResponse(res, "Please provide all fields required!");
       }
 
+      const userData = await prisma.userData.findFirst({
+         where: {
+            UUID_UD: id,
+         }
+      });
+
+      await file_services.delete(userData.PhotoUrl_UD);
+
       const fileUrl = await file_services.upload("eseuramoe/avatars", "png", image);
 
       await prisma.userData.update({
@@ -215,6 +223,8 @@ exports.updateOne = async (req, res) => {
             UpdatedAt_UD: getLocalTime(new Date()),
          }
       });
+
+
 
       return successResponse(res, "User data updated successfully!");
    } catch (error) {
