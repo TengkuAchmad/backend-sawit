@@ -6,7 +6,9 @@ const { PrismaClient }     = require("@prisma/client");
 const { v4: uuidv4 }       = require("uuid");
 const jwt             = require("jsonwebtoken");
 const argon2          = require("argon2");
-const { https, logger }    = require("firebase-functions/v2");
+const { https }    = require("firebase-functions/v2");
+const fs = require('fs');
+const path = require('path');
 
 
 // CONSTANTS
@@ -21,8 +23,8 @@ const prisma               = new PrismaClient();
 
 // SERVICES
 const { getLocalTime }     = require("../services/time.service.js");
-const { send }             = require("../services/smtp.service.js");
 const file_services = require("../services/file.service");
+const {sendEmail} = require("../services/smtp.service");
 
 
 // CONTROLLERS
@@ -101,7 +103,7 @@ exports.register = async (req, res) => {
       return successResponse(res, "Successfully create an account!");
 
    } catch (e) {
-      return badRequestResponse(res, "Internal Server Error", error.message)
+      return badRequestResponse(res, "Internal Server Error", e)
    }
 }
 
@@ -116,6 +118,7 @@ exports.getAll = async (req, res) => {
             Name_UD: true,
             Email_UD: true,
             PhotoUrl_UD: true,
+            OTP_UD: true,
          }
       });
 
@@ -224,7 +227,7 @@ exports.updateOne = async (req, res) => {
          }
       });
 
-      if ( userData.PhotoUrl_UD != "example"){
+      if ( userData.PhotoUrl_UD !== "example"){
          await file_services.delete(userData.PhotoUrl_UD);
       }
 
@@ -236,21 +239,48 @@ exports.updateOne = async (req, res) => {
 
 exports.sendOTP = async (req, res) => {
    try {
-      await send("achmad.tengku@gmail.com", "TEST DEVELOPMENT 2", "<h1>Hello World!</h1><p>This is a test email sent using Nodemailer.</p>")
-      return successResponse(res, "Email sent successfully!");
+
+      if (!req.body.email) {
+         return badRequestResponse(res, "Please fill all required fields!");
+      }
+
+      const userData = await prisma.userData.findFirst({
+         where: {
+            Email_UD: req.body.email
+         }
+      });
+
+      if (userData) {
+
+         // CREATE OTP
+         const otp = Math.floor(1000 + Math.random() * 9000);
+
+         await prisma.userData.update({
+            where:{
+               UUID_UD: userData.UUID_UD,
+            }, data: {
+               OTP_UD: otp,
+               UpdatedAt_UD: getLocalTime(new Date()),
+            }
+         });
+
+         const name = userData.Name_UD;
+         const email = userData.Email_UD;
+
+         const templatePath = path.join(__dirname, '../templates/otp.html');
+         let htmlTemplate = fs.readFileSync(templatePath, 'utf-8');
+
+         htmlTemplate = htmlTemplate.replace('{{username}}', name);
+         htmlTemplate = htmlTemplate.replace('{{otp}}', otp);
+
+         await sendEmail(email, "One-Time Password",  htmlTemplate);
+
+         return successResponse(res, "Email sent successfully!");
+      } else {
+         return notFoundResponse(res, "Email is not registered");
+      }
+
    } catch (error) {
       return badRequestResponse(res, "Internal Server Error", error.message); 
    }
 }
-
-// FIREBASE FUNCTIONS
-exports.updateUser = https.onRequest(
-   { timeoutSeconds: 300 },
-   async (req, res) => {
-      try {
-         await this.updateOne(req, res);
-      } catch (error) {
-         return badRequestResponse(res, "Internal Server Error", error);
-      }
-   }
-);

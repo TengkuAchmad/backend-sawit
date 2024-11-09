@@ -1,35 +1,31 @@
-// ENVIRONTMENTS
+// ENVIRONMENTS
 require('dotenv').config()
 
 // LIBRARIES
-const nodemailer = require("nodemailer");
+const sgMail = require('@sendgrid/mail')
+const {badRequestResponse} = require("../responses/responses");
 
-let transporter = nodemailer.createTransport({
-   host: process.env.MAIL_HOST,
-   port: Number(process.env.MAIL_PORT),
-   secure: true,
-   auth: {
-     user: process.env.MAIL_USERNAME,
-     pass: process.env.MAIL_PASSWORD,
-    },
-  });
-  
-  
-  exports.send = async (recipients, subject, content) => {
-    
-  // MAIL OPTIONS
-  const mailOptions = {
-    from: process.env.MAIL_FROM_ADDRESS,
-    to: recipients,
-    subject: subject,
-    html: content,
-  };
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-  try {
-    await transporter.sendMail(mailOptions);
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+exports.sendEmail = async (receipts, subject, html) => {
+   const msg = {
+      to: receipts,
+      from: 'eseuramoeappsdeveloper@gmail.com',
+      subject: subject,
+      text: "OTP",
+      html: html,
+   }
+
+   sgMail
+      .send(msg)
+      .then(() => {
+         return true;
+      })
+      .catch((error) => {
+         console.log(error.message);
+         return false;
+      })
+
+
+
 }

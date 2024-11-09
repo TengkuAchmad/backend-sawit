@@ -20,6 +20,7 @@ model UserData {
   Password_UD   String
   Role_UD       Roles
   PhotoUrl_UD   String          @db.Text
+  OTP_UD        Int?
   LoggedAt_UD   DateTime?
   UpdatedAt_UD  DateTime        @default(now())
   CreatedAt_UD  DateTime        @default(now())
