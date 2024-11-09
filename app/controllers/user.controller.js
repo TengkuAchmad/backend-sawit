@@ -222,7 +222,9 @@ exports.updateOne = async (req, res) => {
          }
       });
 
-      await file_services.delete(userData.PhotoUrl_UD);
+      if ( userData.PhotoUrl_UD != "example"){
+         await file_services.delete(userData.PhotoUrl_UD);
+      }
 
       return successResponse(res, "User data updated successfully!");
    } catch (error) {
