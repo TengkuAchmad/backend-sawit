@@ -210,8 +210,6 @@ exports.updateOne = async (req, res) => {
          }
       });
 
-      await file_services.delete(userData.PhotoUrl_UD);
-
       const fileUrl = await file_services.upload("eseuramoe/avatars", "png", image);
 
       await prisma.userData.update({
@@ -224,7 +222,7 @@ exports.updateOne = async (req, res) => {
          }
       });
 
-
+      await file_services.delete(userData.PhotoUrl_UD);
 
       return successResponse(res, "User data updated successfully!");
    } catch (error) {

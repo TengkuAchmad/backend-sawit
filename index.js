@@ -40,6 +40,8 @@ const endpoints  = [ app_routes, user_routes, model_routes, scan_routes, result_
 
 app.use(endpoints);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
    console.log(`App is listening on port ${port}`);
 });
+
+server.timeout = 120000;
