@@ -6,12 +6,13 @@ const compression    = require("compression");
 const cookieParser   = require("cookie-parser");
 const multer         = require("multer");
 const morgan         = require("morgan");
+const serverless  = require("serverless-http");
 
 // APP CONFIG
 const app            = express();
 const upload         = multer();
 const port           = process.env.PORT || 3000;
-const appFirebase    = require("./app/firebase/firebase.config.js");
+const appFirebase    = require("../app/firebase/firebase.config.js");
 
 app.use(morgan('combined'));
 
@@ -30,18 +31,20 @@ app.use(upload.any());
 app.use(express.json());
 
 // ROUTES
-const app_routes = require("./app/routes/app.route.js");
-const user_routes = require("./app/routes/user.route.js");
-const model_routes = require("./app/routes/model.route.js");
-const scan_routes = require("./app/routes/scan.route.js");
-const result_routes = require("./app/routes/result.route");
+const app_routes = require("../app/routes/app.route.js");
+const user_routes = require("../app/routes/user.route.js");
+const model_routes = require("../app/routes/model.route.js");
+const scan_routes = require("../app/routes/scan.route.js");
+const result_routes = require("../app/routes/result.route");
 
 const endpoints  = [ app_routes, user_routes, model_routes, scan_routes, result_routes ];
 
-app.use(endpoints);
+app.use('/.netlify/functions/api', endpoints);
 
-const server = app.listen(port, () => {
-   console.log(`App is listening on port ${port}`);
-});
+module.exports.handler = serverless(app);
 
-server.timeout = 120000;
+// const server = app.listen(port, () => {
+//    console.log(`App is listening on port ${port}`);
+// });
+//
+// server.timeout = 120000;
