@@ -24,6 +24,6 @@ router.delete("/user-management/delete/all", authenticateToken, user_controllers
 
 router.delete("/user-management/delete/:id", authenticateToken,  user_controllers.deleteOne);
 
-router.put("/user-management/update/:id", authenticateToken, user_controllers.updateOne);
+router.put("/user-management/update/:id", authenticateToken, user_controllers.updateUser);
 
 module.exports = router;

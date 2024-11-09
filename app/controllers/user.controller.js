@@ -4,8 +4,10 @@ require('dotenv').config();
 // LIBRARIES
 const { PrismaClient }     = require("@prisma/client");
 const { v4: uuidv4 }       = require("uuid");
-const jwt                  = require("jsonwebtoken");
-const argon2               = require("argon2");
+const jwt             = require("jsonwebtoken");
+const argon2          = require("argon2");
+const { https, logger }    = require("firebase-functions/v2");
+
 
 // CONSTANTS
 const { JWT_SECRET }       = process.env;
@@ -240,3 +242,15 @@ exports.sendOTP = async (req, res) => {
       return badRequestResponse(res, "Internal Server Error", error.message); 
    }
 }
+
+// FIREBASE FUNCTIONS
+exports.updateUser = https.onRequest(
+   { timeoutSeconds: 300 },
+   async (req, res) => {
+      try {
+         await this.updateOne(req, res);
+      } catch (error) {
+         return badRequestResponse(res, "Internal Server Error", error);
+      }
+   }
+);
