@@ -267,7 +267,8 @@ exports.sendOTP = async (req, res) => {
          const name = userData.Name_UD;
          const email = userData.Email_UD;
 
-         const templatePath = path.join(__dirname, '../templates/otp.html');
+         const templatePath = path.join(__dirname, '..', 'templates', 'otp.html');
+
          let htmlTemplate = fs.readFileSync(templatePath, 'utf-8');
 
          htmlTemplate = htmlTemplate.replace('{{username}}', name);
