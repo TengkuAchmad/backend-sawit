@@ -274,14 +274,9 @@ exports.sendOTP = async (req, res) => {
          htmlTemplate = htmlTemplate.replace('{{username}}', name);
          htmlTemplate = htmlTemplate.replace('{{otp}}', otp);
 
-         const sent = await sendEmail(email, "One-Time Password",  htmlTemplate);
+        await sendEmail(res, email, "One-Time Password",  htmlTemplate);
 
-         if (sent){
-            return successResponse(res, "Email sent successfully!");
-         } else {
-            return badRequestResponse(res, "Internal Server Error in sending email!");
-         }
-
+        return successResponse(res, "Email sent successfully!");
 
       } else {
          return notFoundResponse(res, "Email is not registered");

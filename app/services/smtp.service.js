@@ -7,7 +7,7 @@ const {badRequestResponse} = require("../responses/responses");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-exports.sendEmail = async (receipts, subject, html) => {
+exports.sendEmail = async (res, receipts, subject, html) => {
    const msg = {
       to: receipts,
       from: 'eseuramoeappsdeveloper@gmail.com',
@@ -22,8 +22,7 @@ exports.sendEmail = async (receipts, subject, html) => {
          return true;
       })
       .catch((error) => {
-         console.log(error.message);
-         return false;
+         return badRequestResponse(res, "Internal Server Error in sending email!", error);
       })
 
 
