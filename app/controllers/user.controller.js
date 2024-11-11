@@ -267,7 +267,10 @@ exports.sendOTP = async (req, res) => {
          const name = userData.Name_UD;
          const email = userData.Email_UD;
 
-         const templatePath = path.join(__dirname, '..', 'templates', 'otp.html');
+         const templatePath = path.resolve(__dirname, "../templates/otp.html");
+         console.log("Current directory:", __dirname);
+         console.log("Template path:", templatePath);
+
 
          let htmlTemplate = fs.readFileSync(templatePath, 'utf-8');
 

@@ -16,14 +16,19 @@ exports.sendEmail = async (res, receipts, subject, html) => {
       html: html,
    }
 
-   sgMail
-      .send(msg)
-      .then(() => {
-         return true;
-      })
-      .catch((error) => {
-         return badRequestResponse(res, "Internal Server Error in sending email!", error);
-      })
+   try {
+      sgMail
+         .send(msg)
+         .then(() => {
+            return true;
+         })
+         .catch((error) => {
+            return badRequestResponse(res, "Internal Server Error in sending email!", error);
+         })
+   } catch (e) {
+      return badRequestResponse(res, "An error occured", e);
+   }
+
 
 
 
