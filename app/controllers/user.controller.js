@@ -251,7 +251,6 @@ exports.sendOTP = async (req, res) => {
       });
 
       if (userData) {
-
          // CREATE OTP
          const otp = Math.floor(1000 + Math.random() * 9000);
 
@@ -268,16 +267,13 @@ exports.sendOTP = async (req, res) => {
          const email = userData.Email_UD;
 
          const templatePath = path.resolve(__dirname, "../templates/otp.html");
-         console.log("Current directory:", __dirname);
-         console.log("Template path:", templatePath);
-
 
          let htmlTemplate = fs.readFileSync(templatePath, 'utf-8');
 
          htmlTemplate = htmlTemplate.replace('{{username}}', name);
          htmlTemplate = htmlTemplate.replace('{{otp}}', otp);
 
-        await sendEmail(res, email, "One-Time Password",  htmlTemplate);
+        const sentEmail = await sendEmail(res, email, "One-Time Password",  htmlTemplate);
 
         return successResponse(res, "Email sent successfully!");
 

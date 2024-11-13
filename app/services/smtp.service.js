@@ -3,7 +3,7 @@ require('dotenv').config()
 
 // LIBRARIES
 const sgMail = require('@sendgrid/mail')
-const {badRequestResponse} = require("../responses/responses");
+const {badRequestResponse, successResponse} = require("../responses/responses");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
@@ -16,18 +16,15 @@ exports.sendEmail = async (res, receipts, subject, html) => {
       html: html,
    }
 
-   try {
-      sgMail
-         .send(msg)
-         .then(() => {
-            return true;
-         })
-         .catch((error) => {
-            return badRequestResponse(res, "Internal Server Error in sending email!", error);
-         })
-   } catch (e) {
-      return badRequestResponse(res, "An error occured", e);
-   }
+   sgMail
+      .send(msg)
+      .then((msg) => {
+         return true;
+      })
+      .catch((error) => {
+         console.log(error);
+      });
+
 
 
 
