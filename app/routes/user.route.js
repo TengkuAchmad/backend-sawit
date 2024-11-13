@@ -28,4 +28,6 @@ router.delete("/user-management/delete/:id", authenticateToken,  user_controller
 
 router.put("/user-management/update/:id", authenticateToken, user_controllers.updateOne);
 
+router.put("/user-management/update/pass/:id", authenticateToken, user_controllers.updatePass);
+
 module.exports = router;

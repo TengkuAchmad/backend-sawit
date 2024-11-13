@@ -119,6 +119,8 @@ exports.getAll = async (req, res) => {
             Email_UD: true,
             PhotoUrl_UD: true,
             OTP_UD: true,
+            LoggedAt_UD: true,
+            UpdatedAt_UD: true,
          }
       });
 
@@ -234,6 +236,32 @@ exports.updateOne = async (req, res) => {
       return successResponse(res, "User data updated successfully!");
    } catch (error) {
       return badRequestResponse(res, "Internal Server Error", error.message ); 
+   }
+}
+
+exports.updatePass = async (req, res) => {
+   try {
+      const { id } = req.params;
+      const { password } = req.body;
+
+      if (!id || !password) {
+         return badRequestResponse(res, "Please provide all required fields!");
+      }
+      const hashedPassword = await argon2.hash(req.body.password);
+
+      await prisma.userData.update({
+         where: {
+            UUID_UD: id,
+         },
+         data: {
+            Password_UD: hashedPassword,
+            UpdatedAt_UD: getLocalTime(new Date()),
+         }
+      });
+
+      return successResponse(res, "Password successfully updated!");
+   } catch (e) {
+      return badRequestResponse(res, "Internal Server Error", e);
    }
 }
 
