@@ -298,11 +298,22 @@ exports.verifyOTP = async (req, res) => {
          where: {
             Email_UD: email
          }, select : {
+            UUID_UD: true,
             OTP_UD: true,
          }
       });
 
       if (otp === otpData.OTP_UD) {
+
+         await prisma.userData.update({
+            data: {
+               OTP_UD: null,
+            },
+            where: {
+               UUID_UD: otpData.UUID_UD,
+            },
+         });
+
          return successResponse(res, "OTP Verified!");
       } else {
          return badRequestResponse(res, "OTP Not Match!");
@@ -310,6 +321,7 @@ exports.verifyOTP = async (req, res) => {
 
 
    } catch (error) {
+      console.log(error.message);
       return badRequestResponse(res, "Internal Server Error", error);
    }
 }
