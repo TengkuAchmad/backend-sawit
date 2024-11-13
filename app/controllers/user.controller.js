@@ -285,3 +285,31 @@ exports.sendOTP = async (req, res) => {
       return badRequestResponse(res, "Internal Server Error", error.message); 
    }
 }
+
+exports.verifyOTP = async (req, res) => {
+   try {
+      const { otp, email } = req.body;
+
+      if (!otp || !email) {
+         return badRequestResponse(res, "Please fill all required fields!");
+      }
+
+      const otpData = await prisma.userData.findFirst({
+         where: {
+            Email_UD: email
+         }, select : {
+            OTP_UD: true,
+         }
+      });
+
+      if (otp === otpData.OTP_UD) {
+         return successResponse(res, "OTP Verified!");
+      } else {
+         return badRequestResponse(res, "OTP Not Match!");
+      }
+
+
+   } catch (error) {
+      return badRequestResponse(res, "Internal Server Error", error);
+   }
+}
