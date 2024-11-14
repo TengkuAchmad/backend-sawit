@@ -48,6 +48,8 @@ exports.getAll = async (req, res) => {
 				UUID_WD: true,
 				UUID_UD: true,
 				Name_WD: true,
+			}, orderBy: {
+				UUID_UD: 'asc',
 			}
 		});
 
@@ -84,6 +86,8 @@ exports.getByUser = async (req, res) => {
 				UUID_UD: id,
 			}, include: {
 				ResultData: true,
+			}, orderBy: {
+				CreatedAt_WD: 'asc',
 			}
 		});
 
