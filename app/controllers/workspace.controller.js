@@ -14,6 +14,7 @@ const prisma               = new PrismaClient();
 
 // SERVICES
 const { getLocalTime }     = require("../services/time.service.js");
+const { parseTime } = require("../services/time.service");
 
 exports.create = async (req, res) => {
 	try {
@@ -95,8 +96,8 @@ exports.getByUser = async (req, res) => {
 			UUID_WD: workspace.UUID_WD,
 			UUID_UD: workspace.UUID_UD,
 			Name_WD: workspace.Name_WD,
-			UpdatedAt_WD: workspace.UpdatedAt_WD,
-			CreatedAt_WD: workspace.CreatedAt_WD,
+			UpdatedAt_WD: parseTime(workspace.UpdatedAt_WD),
+			CreatedAt_WD: parseTime(workspace.CreatedAt_WD),
 			resultCount: workspace.ResultData.length,
 		}));
 
