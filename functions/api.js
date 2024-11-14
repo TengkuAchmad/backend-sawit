@@ -40,12 +40,12 @@ const workspace_routes = require("../app/routes/workspace.route");
 
 const endpoints  = [ app_routes, user_routes, model_routes, scan_routes, result_routes, workspace_routes ];
 
-app.use('/.netlify/functions/api', endpoints);
-
-module.exports.handler = serverless(app);
-
-// app.use(endpoints);
+// app.use('/.netlify/functions/api', endpoints);
 //
-// const server = app.listen(port, () => {
-//    console.log(`App is listening on port ${port}`);
-// });
+// module.exports.handler = serverless(app);
+
+app.use(endpoints);
+
+const server = app.listen(port, () => {
+   console.log(`App is listening on port ${port}`);
+});

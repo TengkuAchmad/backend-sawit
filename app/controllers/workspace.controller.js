@@ -82,10 +82,21 @@ exports.getByUser = async (req, res) => {
 		const data = await prisma.workspaceData.findMany( {
 			where: {
 				UUID_UD: id,
+			}, include: {
+				ResultData: true,
 			}
 		});
 
-		return successResponse(res, "Workspace data retrieved successfully!", data);
+		const response = data.map(workspace => ({
+			UUID_WD: workspace.UUID_WD,
+			UUID_UD: workspace.UUID_UD,
+			Name_WD: workspace.Name_WD,
+			UpdatedAt_WD: workspace.UpdatedAt_WD,
+			CreatedAt_WD: workspace.CreatedAt_WD,
+			resultCount: workspace.ResultData.length,
+		}));
+
+		return successResponse(res, "Workspace data retrieved successfully!", response);
 	} catch (e) {
 		return badRequestResponse(res, "Internal Server Error", e.message);
 	}

@@ -37,12 +37,13 @@ model AppData {
 }
 
 model WorkspaceData {
-  UUID_WD      String   @id @default(uuid())
-  UserData     UserData @relation(fields: [UUID_UD], references: [UUID_UD], onDelete: NoAction, onUpdate: NoAction)
+  UUID_WD      String       @id @default(uuid())
+  UserData     UserData     @relation(fields: [UUID_UD], references: [UUID_UD], onDelete: NoAction, onUpdate: NoAction)
   UUID_UD      String
   Name_WD      String
-  UpdatedAt_WD DateTime @default(now())
-  CreatedAt_WD DateTime @default(now())
+  UpdatedAt_WD DateTime     @default(now())
+  CreatedAt_WD DateTime     @default(now())
+  ResultData   ResultData[]
 }
 
 model ModelData {
@@ -55,12 +56,14 @@ model ModelData {
 }
 
 model ResultData {
-  UUID_RD     String      @id @default(uuid())
-  ModelData   ModelData   @relation(fields: [UUID_MD], references: [UUID_MD], onDelete: NoAction, onUpdate: NoAction)
-  UUID_MD     String
-  ResultIndex ResultIndex @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
-  UUID_RI     String
-  Photo_RD    String      @db.Text
+  UUID_RD       String        @id @default(uuid())
+  ModelData     ModelData     @relation(fields: [UUID_MD], references: [UUID_MD], onDelete: NoAction, onUpdate: NoAction)
+  UUID_MD       String
+  ResultIndex   ResultIndex   @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
+  UUID_RI       String
+  WorkspaceData WorkspaceData @relation(fields: [UUID_WD], references: [UUID_WD], onDelete: NoAction, onUpdate: NoAction)
+  UUID_WD       String
+  Photo_RD      String        @db.Text
 }
 
 model ResultIndex {
