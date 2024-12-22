@@ -187,13 +187,13 @@ exports.deleteOne = async (req, res) => {
    try {
       const { id } = req.params;
       
-      await prisma.workspaceData.delete({
+      await prisma.workspaceData.deleteMany({
          where: {
             UUID_UD: id
          }
       });
       
-      await prisma.userData.delete({
+      await prisma.userData.deleteMany({
          where: {
             UUID_UD: id
          }
