@@ -50,6 +50,7 @@ model ModelData {
   UUID_MD      String       @id @default(uuid())
   Name_MD      String
   Url_MD       String       @db.Text
+  CountDetected_MD Int      @default(0)
   UpdatedAt_MD DateTime     @default(now())
   CreatedAt_MD DateTime     @default(now())
   ResultData   ResultData[]

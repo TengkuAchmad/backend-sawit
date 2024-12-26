@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `ModelData` ADD COLUMN `CountDetected_MD` INTEGER NOT NULL DEFAULT 0;

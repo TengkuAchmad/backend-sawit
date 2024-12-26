@@ -37,15 +37,16 @@ const model_routes = require("../app/routes/model.route.js");
 const scan_routes = require("../app/routes/scan.route.js");
 const result_routes = require("../app/routes/result.route");
 const workspace_routes = require("../app/routes/workspace.route");
+const data_routes = require("../app/routes/data.route.js");
 
-const endpoints  = [ app_routes, user_routes, model_routes, scan_routes, result_routes, workspace_routes ];
+const endpoints  = [ app_routes, user_routes, model_routes, scan_routes, result_routes, workspace_routes, data_routes ];
 
 app.use('/.netlify/functions/api', endpoints);
 
 module.exports.handler = serverless(app);
 
 // app.use(endpoints);
-//
+
 // const server = app.listen(port, () => {
 //    console.log(`App is listening on port ${port}`);
 // });

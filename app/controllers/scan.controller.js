@@ -25,6 +25,12 @@ exports.create = async (req, res) => {
 
 exports.getScan = async (req, res) => {
    try {
+      const { model_id } = req.body;
+
+      if (!model_id){
+         return badRequestResponse(res, "Please provide all required fields!");
+      }
+
       const response = {
          "data" : [
             {
@@ -62,7 +68,28 @@ exports.getScan = async (req, res) => {
             }
          ]
       }
+
+      const modelData = await prisma.modelData.findFirst({
+         where: {
+            UUID_MD: model_id,
+         }, select: {
+            CountDetected_MD: true,
+         }
+      });
+
+
+      await prisma.modelData.update({
+         data: {
+            CountDetected_MD: modelData.CountDetected_MD + 1,
+            UpdatedAt_MD: getLocalTime(new Date())
+         },
+         where: {
+            UUID_MD: model_id,
+         }
+      });
+
       return successResponse(res, "Scan completed succesfully!", response);
+
    } catch (error) {
       return badRequestResponse(res, "Internal Server Error", error.message);
    }
