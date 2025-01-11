@@ -107,6 +107,39 @@ exports.register = async (req, res) => {
    }
 }
 
+exports.registerAdmin = async (req, res) => {
+   try {
+      if (!req.body.name || !req.body.email || !req.body.password) {
+         return errorResponse(res, "Please provide all fields!");
+      }
+
+      let photo = "default";
+
+      if (req.body.photo) {
+         photo = req.body.photo;
+      }
+
+      const hashedPassword = await argon2.hash(req.body.password);
+
+      await prisma.userData.create({
+         data: {
+            Name_UD: req.body.name,
+            Email_UD: req.body.email,
+            Password_UD: hashedPassword,
+            Role_UD: "ADMIN",
+            PhotoUrl_UD: photo,
+            UpdatedAt_UD: getLocalTime(new Date()),
+            CreatedAt_UD: getLocalTime(new Date()),
+         }
+      });
+
+      return successResponse(res, "Successfully create an account!");
+
+   } catch (e) {
+      return badRequestResponse(res, "Internal Server Error", e)
+   }
+}
+
 exports.getAll = async (req, res) => {
    try {
       const userData = await prisma.userData.findMany({
@@ -176,7 +209,11 @@ exports.getByEmail = async (req, res) => {
 exports.deleteAll = async (req, res) => {
    try {
       await prisma.workspaceData.deleteMany({});
-      await prisma.userData.deleteMany({});
+      await prisma.userData.deleteMany({
+         where: {
+            Role_UD: "USER",
+         }
+      });
       return successResponse(res, "Deleted all user data!");
    } catch (error) {
       return badRequestResponse(res, "Internal Server Error", error.message);
