@@ -28,6 +28,10 @@ router.post("/user-management/send/otp", authenticateToken, user_controllers.sen
 
 router.post("/user-management/verify/otp", authenticateToken, user_controllers.verifyOTP);
 
+router.delete("/user-management/delete/admin/all", authenticateToken, user_controllers.deleteAllAdmin);
+
+router.delete("/user-management/delete/admin/:id", authenticateToken,  user_controllers.deleteOneAdmin);
+
 router.delete("/user-management/delete/all", authenticateToken, user_controllers.deleteAll);
 
 router.delete("/user-management/delete/:id", authenticateToken,  user_controllers.deleteOne);

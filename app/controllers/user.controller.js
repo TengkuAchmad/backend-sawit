@@ -267,7 +267,6 @@ exports.deleteAll = async (req, res) => {
    }
 }
 
-
 exports.deleteOne = async (req, res) => {
    try {
       const { id } = req.params;
