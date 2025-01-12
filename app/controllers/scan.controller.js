@@ -102,7 +102,7 @@ exports.getScan = async (req, res) => {
                "Ketinggian" : soilData.Ketinggian_SORI,               
             },
             {
-               "Sampel": featureClass,
+               "Sampel": palmData.Sampel_PRI,
                "ALB": palmData.ALB_PRI,
                "Rendemen": palmData.Rendemen_PRI,
                "Densitas": palmData.Densitas_PRI,

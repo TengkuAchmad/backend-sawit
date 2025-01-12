@@ -13,6 +13,11 @@ enum Roles {
   SUPERADMIN
 }
 
+enum ModelTypes {
+  SCAN_TEST
+  LAB_TEST
+}
+
 model UserData {
   UUID_UD       String          @id @default(uuid())
   Name_UD       String
@@ -50,6 +55,7 @@ model ModelData {
   UUID_MD      String       @id @default(uuid())
   Name_MD      String
   Url_MD       String       @db.Text
+  Type_MD      ModelTypes
   CountDetected_MD Int      @default(0)
   UpdatedAt_MD DateTime     @default(now())
   CreatedAt_MD DateTime     @default(now())
@@ -111,6 +117,7 @@ model SoilResultIndex {
 
 model PalmResultIndex {
   UUID_PRI     String        @id @default(uuid())
+  Sampel_PRI   String
   ALB_PRI      Float
   Rendemen_PRI Float
   Densitas_PRI Float

@@ -18,7 +18,7 @@ const { getLocalTime }     = require("../services/time.service.js");
 // ESSENTIALS FUNCTION
 exports.create = async (req, res) => {
 	try {
-		if (!req.body.title || !req.body.latitude || !req.body.longitude || !req.body.kabupaten || !req.body.desa || !req.body.kecamatan || !req.body.umur || !req.body.lereng || !req.body.drainase || !req.body.genangan || !req.body.topografi || !req.body.erosi || !req.body.batuanper || !req.body.batuansin || !req.body.ketinggian || !req.body.alb || !req.body.rendemen || !req.body.densitas || !req.body.min_transmittan || !req.body.max_transmittan || !req.body.min_gelombang || !req.body.max_gelombang){
+		if (!req.body.title || !req.body.latitude || !req.body.longitude || !req.body.kabupaten || !req.body.desa || !req.body.kecamatan || !req.body.umur || !req.body.lereng || !req.body.drainase || !req.body.genangan || !req.body.topografi || !req.body.erosi || !req.body.batuanper || !req.body.batuansin || !req.body.ketinggian || !req.body.sampel || !req.body.alb || !req.body.rendemen || !req.body.densitas || !req.body.min_transmittan || !req.body.max_transmittan || !req.body.min_gelombang || !req.body.max_gelombang){
 			return badRequestResponse(res, "Please fill all required fields!");
 		}
 
@@ -58,6 +58,7 @@ exports.create = async (req, res) => {
 		await prisma.palmResultIndex.create({
 			data: {
 				UUID_PRI: id_pri,
+				Sampel_PRI: req.body.sampel,
 				ALB_PRI: req.body.alb,
 				Rendemen_PRI: req.body.rendemen,
 				Densitas_PRI: req.body.densitas
