@@ -21,8 +21,8 @@ const FormData             = require('form-data');
 
 exports.getScan = async (req, res) => {
 
-
    try {
+      const token = req.locals.token;
       const { model_id } = req.body;
       const target = req.files;
 
@@ -32,6 +32,10 @@ exports.getScan = async (req, res) => {
 
       const formData = new FormData();
 
+      formData.append('token', token );
+
+      formData.append('model_id', model_id);
+
       formData.append('file', target[0].buffer, target[0].originalname);
 
       const engineResponse = await axios.post('http://128.199.122.162:8000/engine-scan', formData, {
@@ -40,6 +44,7 @@ exports.getScan = async (req, res) => {
             ...formData.getHeaders(),
          },
       });
+
 
       const featureClass = engineResponse.data['result'];
 

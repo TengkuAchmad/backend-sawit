@@ -478,7 +478,6 @@ exports.verifyOTP = async (req, res) => {
 
 
    } catch (error) {
-      console.log(error.message);
       return badRequestResponse(res, "Internal Server Error", error);
    }
 }

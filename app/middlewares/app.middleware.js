@@ -51,7 +51,7 @@ const authenticateToken = async (req, res, next) => {
             return expiredTokenResponse(res, "Token expired!");
          }
 
-         req.locals = { user: decoded.userID };
+         req.locals = { user: decoded.userID, token };
 
          return next()
 

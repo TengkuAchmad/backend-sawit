@@ -80,8 +80,6 @@ exports.getByUser = async (req, res) => {
 	try {
 		const id = req.locals.user;
 
-		console.log(id);
-
 		const data = await prisma.workspaceData.findMany( {
 			where: {
 				UUID_UD: id,

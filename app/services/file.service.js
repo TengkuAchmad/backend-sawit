@@ -26,7 +26,6 @@ exports.upload = async (category, type, file) => {
       return fileUrl;
 
    } catch (error) {
-      console.log(error);
       throw new Error(error.message)
    }
 }
