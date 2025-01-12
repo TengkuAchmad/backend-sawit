@@ -7,28 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Roles {
-  USER
-  ADMIN
-  SUPERADMIN
-}
-
-enum ModelTypes {
-  SCAN_TEST
-  LAB_TEST
-}
-
 model UserData {
   UUID_UD       String          @id @default(uuid())
   Name_UD       String
   Email_UD      String
   Password_UD   String
   Role_UD       Roles
-  PhotoUrl_UD   String          @db.Text
-  OTP_UD        Int?
   LoggedAt_UD   DateTime?
   UpdatedAt_UD  DateTime        @default(now())
   CreatedAt_UD  DateTime        @default(now())
+  PhotoUrl_UD   String          @db.Text
+  OTP_UD        Int?
   WorkspaceData WorkspaceData[]
 }
 
@@ -36,59 +25,71 @@ model AppData {
   UUID_AD        String   @id @default(uuid())
   Version_AD     String   @unique
   Description_AD String   @db.Text
-  Url_AD         String   @db.Text
   UpdatedAt_AD   DateTime @default(now())
   CreatedAt_AD   DateTime @default(now())
+  Url_AD         String   @db.Text
 }
 
 model WorkspaceData {
   UUID_WD      String       @id @default(uuid())
-  UserData     UserData     @relation(fields: [UUID_UD], references: [UUID_UD], onDelete: NoAction, onUpdate: NoAction)
   UUID_UD      String
   Name_WD      String
   UpdatedAt_WD DateTime     @default(now())
   CreatedAt_WD DateTime     @default(now())
   ResultData   ResultData[]
+  UserData     UserData     @relation(fields: [UUID_UD], references: [UUID_UD], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([UUID_UD], map: "WorkspaceData_UUID_UD_fkey")
 }
 
 model ModelData {
-  UUID_MD      String       @id @default(uuid())
-  Name_MD      String
-  Url_MD       String       @db.Text
-  Type_MD      ModelTypes
-  CountDetected_MD Int      @default(0)
-  UpdatedAt_MD DateTime     @default(now())
-  CreatedAt_MD DateTime     @default(now())
-  ResultData   ResultData[]
+  UUID_MD          String       @id @default(uuid())
+  Name_MD          String
+  Url_MD           String       @db.Text
+  UpdatedAt_MD     DateTime     @default(now())
+  CreatedAt_MD     DateTime     @default(now())
+  CountDetected_MD Int          @default(0)
+  Type_MD          ModelTypes
+  ResultData       ResultData[]
 }
 
 model ResultData {
-  UUID_RD       String        @id @default(uuid())
-  ModelData     ModelData     @relation(fields: [UUID_MD], references: [UUID_MD], onDelete: NoAction, onUpdate: NoAction)
+  UUID_RD       String         @id @default(uuid())
   UUID_MD       String
-  ResultIndex   ResultIndex   @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
+  Photo_RD      String         @db.Text
   UUID_RI       String
-  WorkspaceData WorkspaceData? @relation(fields: [UUID_WD], references: [UUID_WD], onDelete: NoAction, onUpdate: NoAction)
   UUID_WD       String?
-  Photo_RD      String        @db.Text
+  ModelData     ModelData      @relation(fields: [UUID_MD], references: [UUID_MD], onDelete: NoAction, onUpdate: NoAction)
+  ResultIndex   ResultIndex    @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
+  WorkspaceData WorkspaceData? @relation(fields: [UUID_WD], references: [UUID_WD], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([UUID_MD], map: "ResultData_UUID_MD_fkey")
+  @@index([UUID_RI], map: "ResultData_UUID_RI_fkey")
+  @@index([UUID_WD], map: "ResultData_UUID_WD_fkey")
 }
 
 model ResultIndex {
-  UUID_RI                String                 @id @default(uuid())
-  SocialResultIndex      SocialResultIndex      @relation(fields: [UUID_SRI], references: [UUID_SRI], onDelete: NoAction, onUpdate: NoAction)
-  UUID_SRI               String
-  SoilResultIndex        SoilResultIndex        @relation(fields: [UUID_SORI], references: [UUID_SORI], onDelete: NoAction, onUpdate: NoAction)
-  UUID_SORI              String
-  PalmResultIndex        PalmResultIndex        @relation(fields: [UUID_PRI], references: [UUID_PRI], onDelete: NoAction, onUpdate: NoAction)
-  UUID_PRI               String
-  TransmittanResultIndex TransmittanResultIndex @relation(fields: [UUID_TRI], references: [UUID_TRI], onDelete: NoAction, onUpdate: NoAction)
-  UUID_TRI               String
-  GelombangResultIndex   GelombangResultIndex   @relation(fields: [UUID_GRI], references: [UUID_GRI], onDelete: NoAction, onUpdate: NoAction)
-  UUID_GRI               String
-  Title_RI               String                 @unique
-  CreatedAt_RI           DateTime               @default(now())
-  UpdatedAt_RI           DateTime               @default(now())
+  UUID_RI                String                  @id @default(uuid())
+  UUID_SRI               String?
+  UUID_SORI              String?
+  UUID_PRI               String?
+  UUID_TRI               String?
+  UUID_GRI               String?
+  Title_RI               String                  @unique
+  CreatedAt_RI           DateTime                @default(now())
+  UpdatedAt_RI           DateTime                @default(now())
   ResultData             ResultData[]
+  GelombangResultIndex   GelombangResultIndex?   @relation(fields: [UUID_GRI], references: [UUID_GRI], onDelete: NoAction, onUpdate: NoAction)
+  PalmResultIndex        PalmResultIndex?        @relation(fields: [UUID_PRI], references: [UUID_PRI], onDelete: NoAction, onUpdate: NoAction)
+  SoilResultIndex        SoilResultIndex?        @relation(fields: [UUID_SORI], references: [UUID_SORI], onDelete: NoAction, onUpdate: NoAction)
+  SocialResultIndex      SocialResultIndex?      @relation(fields: [UUID_SRI], references: [UUID_SRI], onDelete: NoAction, onUpdate: NoAction)
+  TransmittanResultIndex TransmittanResultIndex? @relation(fields: [UUID_TRI], references: [UUID_TRI], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([UUID_GRI], map: "ResultIndex_UUID_GRI_fkey")
+  @@index([UUID_PRI], map: "ResultIndex_UUID_PRI_fkey")
+  @@index([UUID_SORI], map: "ResultIndex_UUID_SORI_fkey")
+  @@index([UUID_SRI], map: "ResultIndex_UUID_SRI_fkey")
+  @@index([UUID_TRI], map: "ResultIndex_UUID_TRI_fkey")
 }
 
 model SocialResultIndex {
@@ -98,29 +99,29 @@ model SocialResultIndex {
   Kabupaten_SRI String
   Desa_SRI      String
   Kecamatan_SRI String
+  Umur_SRI      String
   ResultIndex   ResultIndex[]
 }
 
 model SoilResultIndex {
   UUID_SORI        String        @id @default(uuid())
-  Umur_SORI        String
   Lereng_SORI      String
   Drainase_SORI    String
-  Genangan_SORI    String
   Topografi_SORI   String
   BahayaErosi_SORI String
   BatuanPer_SORI   String
   BatuanSin_SORI   String
   Ketinggian_SORI  String
+  Genangan_SORI    String
   ResultIndex      ResultIndex[]
 }
 
 model PalmResultIndex {
   UUID_PRI     String        @id @default(uuid())
-  Sampel_PRI   String
   ALB_PRI      Float
   Rendemen_PRI Float
   Densitas_PRI Float
+  Sampel_PRI   String
   ResultIndex  ResultIndex[]
 }
 
@@ -133,7 +134,18 @@ model TransmittanResultIndex {
 
 model GelombangResultIndex {
   UUID_GRI    String        @id @default(uuid())
-  Min_GRI     Float
   Max_GRI     Float
+  Min_GRI     Float
   ResultIndex ResultIndex[]
+}
+
+enum Roles {
+  USER
+  ADMIN
+  SUPERADMIN
+}
+
+enum ModelTypes {
+  SCAN_TEST
+  LAB_TEST
 }

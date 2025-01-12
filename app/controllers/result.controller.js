@@ -32,6 +32,7 @@ exports.create = async (req, res) => {
 		await prisma.socialResultIndex.create({
 			data: {
 				UUID_SRI: id_sri,
+				Umur_SRI: req.body.umur,
 				Longitude_SRI: req.body.longitude,
 				Latitude_SRI: req.body.latitude,
 				Kabupaten_SRI: req.body.kabupaten,
@@ -43,7 +44,6 @@ exports.create = async (req, res) => {
 		await prisma.soilResultIndex.create({
 			data: {
 				UUID_SORI: id_sori,
-				Umur_SORI: req.body.umur,
 				Lereng_SORI: req.body.lereng,
 				Drainase_SORI: req.body.drainase,
 				Genangan_SORI: req.body.genangan,

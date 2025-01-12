@@ -89,6 +89,7 @@ exports.getScan = async (req, res) => {
          "data" : [
             {
                "sample": featureClass,
+               "Umur": soilData.Umur_SRI,
                "longitude": socialData.Longitude_SRI,
                "latitude": socialData.Latitude_SRI,
                "kabupaten": socialData.Kabupaten_SRI,
@@ -96,7 +97,6 @@ exports.getScan = async (req, res) => {
                "Kecamatan" : socialData.Kecamatan_SRI,
             },
             {
-               "Umur": soilData.Umur_SORI,
                "Lereng" : soilData.Lereng_SORI,
                "Drainase" : soilData.Drainase_SORI,
                "Genangan" : soilData.Genangan_SORI,
