@@ -15,14 +15,6 @@ const prisma               = new PrismaClient();
 const file_services        = require("../services/file.service.js");
 const { getLocalTime }     = require("../services/time.service.js");
 
-exports.create = async (req, res) => {
-   try {
-
-   } catch (e) {
-      return badRequestResponse(res, "Internal Server Error", e.message);
-   }
-}
-
 exports.getScan = async (req, res) => {
    try {
       const { model_id } = req.body;
