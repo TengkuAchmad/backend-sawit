@@ -15,48 +15,105 @@ const prisma               = new PrismaClient();
 const file_services        = require("../services/file.service.js");
 const { getLocalTime }     = require("../services/time.service.js");
 
+// AXIOS INSTANCES
+const axios                = require("axios");
+const FormData             = require('form-data');
+
 exports.getScan = async (req, res) => {
+
+
    try {
       const { model_id } = req.body;
+      const target = req.files;
 
-      if (!model_id){
+      if (!model_id || !target){
          return badRequestResponse(res, "Please provide all required fields!");
       }
+
+      const formData = new FormData();
+
+      formData.append('file', target[0].buffer, target[0].originalname);
+
+      const engineResponse = await axios.post('http://128.199.122.162:8000/engine-scan', formData, {
+         headers: {
+            'Content-Type': 'multipart/form-data',
+            ...formData.getHeaders(),
+         },
+      });
+
+      const featureClass = engineResponse.data['result'];
+
+      // SEARCH
+      const resultData = await prisma.resultIndex.findFirst({
+         where: {
+            Title_RI: featureClass,
+         },
+      });
+
+      const socialData = await prisma.socialResultIndex.findFirst({
+         where: {
+            UUID_SRI: resultData.UUID_SRI,
+         }
+      });
+
+      const soilData = await prisma.soilResultIndex.findFirst({
+         where: {
+            UUID_SORI: resultData.UUID_SORI,
+         }
+      });
+
+      const palmData = await prisma.palmResultIndex.findFirst({
+         where: {
+            UUID_PRI: resultData.UUID_PRI,
+         }
+      });
+
+      const transmittanData = await prisma.transmittanResultIndex.findFirst({
+         where: {
+            UUID_TRI: resultData.UUID_TRI,
+         }
+      });
+
+      const gelombangData = await prisma.gelombangResultIndex.findFirst({
+         where: {
+            UUID_GRI: resultData.UUID_GRI,
+         }
+      });
 
       const response = {
          "data" : [
             {
-               "sample": "AB_301",
-               "longitude": "96.729998",
-               "latitude": "3.843658",
-               "kabupaten": "Aceh Barat Daya",
-               "Desa": "Blang Dalam",
-               "Kecamatan" : "Babah Rot"
+               "sample": featureClass,
+               "longitude": socialData.Longitude_SRI,
+               "latitude": socialData.Latitude_SRI,
+               "kabupaten": socialData.Kabupaten_SRI,
+               "Desa": socialData.Desa_SRI,
+               "Kecamatan" : socialData.Kecamatan_SRI,
             },
             {
-               "Umur": "3-5",
-               "Lereng" : "<8",
-               "Drainase" : "Baik, sedang",
-               "Genangan" : "f0",
-               "Topografi": "Datar, landai",
-               "BahayaErosi" : "Rendah, sedang",
-               "BatuanPer": "<5",
-               "BatuanSin": "<5",
-               "Ketinggian" : "<200",               
+               "Umur": soilData.Umur_SORI,
+               "Lereng" : soilData.Lereng_SORI,
+               "Drainase" : soilData.Drainase_SORI,
+               "Genangan" : soilData.Genangan_SORI,
+               "Topografi": soilData.Topografi_SORI,
+               "BahayaErosi" : soilData.BahayaErosi_SORI,
+               "BatuanPer": soilData.BatuanPer_SORI,
+               "BatuanSin": soilData.BatuanSin_SORI,
+               "Ketinggian" : soilData.Ketinggian_SORI,               
             },
             {
-               "Sampel": "AB 30",
-               "ALB": "2.5",
-               "Rendemen": "52.77",
-               "Densitas": "0.99762",
+               "Sampel": featureClass,
+               "ALB": palmData.ALB_PRI,
+               "Rendemen": palmData.Rendemen_PRI,
+               "Densitas": palmData.Densitas_PRI,
             },
             {
-               "TransmitanMin": "8.505528",
-               "TransmitanMax": "82.769336"
+               "TransmitanMin": transmittanData.Min_TRI,
+               "TransmitanMax": transmittanData.Max_TRI,
             },
             {
-               "GelombangMin": "399.264912",
-               "GelombangMax": "1500.618848"
+               "GelombangMin": gelombangData.Min_GRI,
+               "GelombangMax": gelombangData.Max_GRI,
             }
          ]
       }
@@ -72,11 +129,22 @@ exports.getScan = async (req, res) => {
 
       await prisma.modelData.update({
          data: {
-            CountDetected_MD: modelData.CountDetected_MD + 1,
+            CountDetected_MD: modelData.CountDetected_MD ?? 0 + 1,
             UpdatedAt_MD: getLocalTime(new Date())
          },
          where: {
             UUID_MD: model_id,
+         }
+      });
+      
+       const fileUrl = await file_services.upload("eseuramoe/images", "png", target);
+
+      await prisma.resultData.create({
+         data: {
+            UUID_MD: model_id,
+            Photo_RD: fileUrl,
+            UUID_RI: resultData.UUID_RI,
+            UUID_WD: null,
          }
       });
 

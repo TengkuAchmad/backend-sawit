@@ -62,8 +62,8 @@ model ResultData {
   UUID_MD       String
   ResultIndex   ResultIndex   @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
   UUID_RI       String
-  WorkspaceData WorkspaceData @relation(fields: [UUID_WD], references: [UUID_WD], onDelete: NoAction, onUpdate: NoAction)
-  UUID_WD       String
+  WorkspaceData WorkspaceData? @relation(fields: [UUID_WD], references: [UUID_WD], onDelete: NoAction, onUpdate: NoAction)
+  UUID_WD       String?
   Photo_RD      String        @db.Text
 }
 

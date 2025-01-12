@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `ResultData` MODIFY `UUID_WD` VARCHAR(191) NULL;
