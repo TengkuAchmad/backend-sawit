@@ -31,12 +31,12 @@ exports.get = async (req, res) => {
             }
         });
 
-        detectedCount = dataCount.CountDetected_MD;
+        detectedCount = dataCount?.CountDetected_MD ?? 0;
         
         var response = {
-            "resultCount": resultCount,
-            "modelCount": modelCount,
-            "detectedCount": detectedCount,
+            "resultCount": resultCount ?? 0,
+            "modelCount": modelCount ?? 0,
+            "detectedCount": detectedCount ?? 0,
             "timestamp": getLocalTime(new Date())
         };
 

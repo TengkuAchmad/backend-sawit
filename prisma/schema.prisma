@@ -70,7 +70,6 @@ model ResultData {
 
 model ResultIndex {
   UUID_RI                String                  @id @default(uuid())
-  UUID_SRI               String?
   UUID_SORI              String?
   UUID_PRI               String?
   UUID_TRI               String?
@@ -82,37 +81,38 @@ model ResultIndex {
   GelombangResultIndex   GelombangResultIndex?   @relation(fields: [UUID_GRI], references: [UUID_GRI], onDelete: NoAction, onUpdate: NoAction)
   PalmResultIndex        PalmResultIndex?        @relation(fields: [UUID_PRI], references: [UUID_PRI], onDelete: NoAction, onUpdate: NoAction)
   SoilResultIndex        SoilResultIndex?        @relation(fields: [UUID_SORI], references: [UUID_SORI], onDelete: NoAction, onUpdate: NoAction)
-  SocialResultIndex      SocialResultIndex?      @relation(fields: [UUID_SRI], references: [UUID_SRI], onDelete: NoAction, onUpdate: NoAction)
   TransmittanResultIndex TransmittanResultIndex? @relation(fields: [UUID_TRI], references: [UUID_TRI], onDelete: NoAction, onUpdate: NoAction)
+  SocialResultIndex      SocialResultIndex[]
 
   @@index([UUID_GRI], map: "ResultIndex_UUID_GRI_fkey")
   @@index([UUID_PRI], map: "ResultIndex_UUID_PRI_fkey")
   @@index([UUID_SORI], map: "ResultIndex_UUID_SORI_fkey")
-  @@index([UUID_SRI], map: "ResultIndex_UUID_SRI_fkey")
   @@index([UUID_TRI], map: "ResultIndex_UUID_TRI_fkey")
 }
 
 model SocialResultIndex {
-  UUID_SRI      String        @id @default(uuid())
+  UUID_SRI      String       @id @default(uuid())
   Longitude_SRI Float
   Latitude_SRI  Float
   Kabupaten_SRI String
-  Desa_SRI      String
   Kecamatan_SRI String
   Umur_SRI      String
-  ResultIndex   ResultIndex[]
+  UUID_RI       String?
+  ResultIndex   ResultIndex? @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([UUID_RI], map: "SocialResultIndex_UUID_RI_fkey")
 }
 
 model SoilResultIndex {
   UUID_SORI        String        @id @default(uuid())
-  Lereng_SORI      String
-  Drainase_SORI    String
-  Topografi_SORI   String
-  BahayaErosi_SORI String
-  BatuanPer_SORI   String
-  BatuanSin_SORI   String
-  Ketinggian_SORI  String
-  Genangan_SORI    String
+  Lereng_SORI      String?
+  Drainase_SORI    String?
+  Topografi_SORI   String?
+  BahayaErosi_SORI String?
+  BatuanPer_SORI   String?
+  BatuanSin_SORI   String?
+  Ketinggian_SORI  String?
+  Genangan_SORI    String?
   ResultIndex      ResultIndex[]
 }
 
