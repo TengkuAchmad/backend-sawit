@@ -20,6 +20,10 @@ router.get("/user-management/get/all", authenticateToken, user_controllers.getAl
 
 router.get("/user-management/get/:id", authenticateToken, user_controllers.getOne);
 
+router.get("/user-management/get/admin/all", authenticateToken, user_controllers.getAllAdmin);
+
+router.get("/user-management/get/admin/:id", authenticateToken, user_controllers.getOneAdmin);
+
 router.post("/user-management/send/otp", authenticateToken, user_controllers.sendOTP);
 
 router.post("/user-management/verify/otp", authenticateToken, user_controllers.verifyOTP);

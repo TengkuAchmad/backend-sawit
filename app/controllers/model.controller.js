@@ -51,6 +51,8 @@ exports.findAll = async (req, res) => {
             UUID_MD: true,
             Name_MD: true,
             Url_MD: true,
+            CreatedAt_MD: true,
+            UpdatedAt_MD: true,
          }
       });
       
@@ -72,6 +74,8 @@ exports.findOne = async (req, res) => {
             UUID_MD: true,
             Name_MD: true,
             Url_MD: true,
+            CreatedAt_MD: true,
+            UpdatedAt_MD: true,
          }
       })
       return successResponse(res, "Data Model Retrieved Successfully", data);

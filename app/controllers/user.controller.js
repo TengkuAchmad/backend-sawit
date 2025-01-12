@@ -186,6 +186,53 @@ exports.getOne = async (req, res) => {
    }
 }
 
+exports.getAllAdmin = async (req, res) => {
+   try {
+      const userData = await prisma.userData.findMany({
+         where: {
+            Role_UD: "ADMIN"
+         },
+         select: {
+            UUID_UD: true,
+            Name_UD: true,
+            Email_UD: true,
+            PhotoUrl_UD: true,
+            OTP_UD: true,
+            LoggedAt_UD: true,
+            UpdatedAt_UD: true,
+         }
+      });
+
+      return successResponse(res, "Sucessfully retrieved data", userData);
+
+   } catch (error) {
+      return badRequestResponse(res, "Internal Server Error", error.message);
+   }
+}
+
+exports.getOneAdmin = async (req, res) => {
+   try {
+      const { id } = req.params;
+
+      const userData = await prisma.userData.findUnique({
+         where: {
+            UUID_UD: id,
+            Role_UD: "ADMIN",
+         }, select: {
+            UUID_UD: true,
+            Name_UD: true,
+            Email_UD: true,
+            Role_UD: true,
+            PhotoUrl_UD: true,
+         }
+      });
+
+      return successResponse(res, "Succesfully retrieved data!", userData);
+   } catch (error) {
+      return badRequestResponse(res, "Internal Server Error", error.message);
+   }
+}
+
 exports.getByEmail = async (req, res) => {
    try {
       if (req.body.email) {
@@ -220,6 +267,7 @@ exports.deleteAll = async (req, res) => {
    }
 }
 
+
 exports.deleteOne = async (req, res) => {
    try {
       const { id } = req.params;
@@ -237,6 +285,44 @@ exports.deleteOne = async (req, res) => {
       });
 
       return successResponse(res, "Deleted successfully");
+
+   } catch (error) {
+      return badRequestResponse(res, "Internal Server Error", error.message)
+   }
+}
+
+exports.deleteAllAdmin = async (req, res) => {
+   try {
+      await prisma.workspaceData.deleteMany({});
+      await prisma.userData.deleteMany({
+         where: {
+            Role_UD: "ADMIN",
+         }
+      });
+      return successResponse(res, "Deleted all admin data!");
+   } catch (error) {
+      return badRequestResponse(res, "Internal Server Error", error.message);
+   }
+}
+
+
+exports.deleteOneAdmin = async (req, res) => {
+   try {
+      const { id } = req.params;
+      
+      await prisma.workspaceData.deleteMany({
+         where: {
+            UUID_UD: id
+         }
+      });
+      
+      await prisma.userData.deleteMany({
+         where: {
+            UUID_UD: id
+         }
+      });
+
+      return successResponse(res, "Admin data deleted asuccessfully");
 
    } catch (error) {
       return badRequestResponse(res, "Internal Server Error", error.message)
