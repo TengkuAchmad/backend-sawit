@@ -19,7 +19,7 @@ const { getLocalTime }     = require("../services/time.service.js");
 
 exports.create = async (req, res) => {
    try {
-      const { name } = req.body;
+      const { name, type } = req.body;
 
       const model = req.files;
 
@@ -33,6 +33,7 @@ exports.create = async (req, res) => {
          data: {
             Name_MD: name,
             Url_MD: fileUrl,
+            Type_MD: type,
             UpdatedAt_MD: getLocalTime(new Date()),
             CreatedAt_MD: getLocalTime(new Date())
          }
@@ -51,6 +52,7 @@ exports.findAll = async (req, res) => {
             UUID_MD: true,
             Name_MD: true,
             Url_MD: true,
+            Type_MD: true,
             CreatedAt_MD: true,
             UpdatedAt_MD: true,
          }
@@ -74,6 +76,7 @@ exports.findOne = async (req, res) => {
             UUID_MD: true,
             Name_MD: true,
             Url_MD: true,
+            Type_MD: true,
             CreatedAt_MD: true,
             UpdatedAt_MD: true,
          }
