@@ -461,7 +461,6 @@ exports.verifyOTP = async (req, res) => {
       });
 
       if (otp === otpData.OTP_UD) {
-
          await prisma.userData.update({
             data: {
                OTP_UD: null,
@@ -470,8 +469,12 @@ exports.verifyOTP = async (req, res) => {
                UUID_UD: otpData.UUID_UD,
             },
          });
+         
+         var response = {
+            "id" : otpData.UUID_UD,
+         };
 
-         return successResponse(res, "OTP Verified!");
+         return successResponse(res, "OTP Verified!", response);
       } else {
          return badRequestResponse(res, "OTP Not Match!");
       }
