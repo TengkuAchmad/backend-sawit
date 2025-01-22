@@ -87,6 +87,25 @@ exports.findOne = async (req, res) => {
    }
 }
 
+exports.findByCategory = async (req, res) => {
+   try {
+      if (!req.body.category){
+         return badRequestResponse(res, "Please fill all required fields!");
+      }
+
+      const modelData = await prisma.modelData.findMany({
+         where: {
+            Type_MD: req.body.category
+         }
+      });
+
+      return successResponse(res, "All data retrieved", modelData);
+
+   } catch (error) {
+      return badRequestResponse(res, "Internal Server Error", error.message);
+   }
+}
+
 exports.deleteAll = async (req, res) => {
    try {
       const fileDatas = await prisma.modelData.findMany({

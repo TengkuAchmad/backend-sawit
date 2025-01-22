@@ -14,6 +14,8 @@ router.get("/model-management/get/all", authenticateToken, model_controllers.fin
 
 router.get("/model-management/get/:id", authenticateToken, model_controllers.findOne);
 
+router.post("/model-management/get/category", authenticateToken, model_controllers.findByCategory);
+
 router.delete("/model-management/delete/all", authenticateToken, model_controllers.deleteAll);
 
 router.delete("/model-management/delete/:id", authenticateToken, model_controllers.deleteOne);
