@@ -146,3 +146,21 @@ exports.deleteByUser = async (req, res) => {
 		return badRequestResponse(res, "Internal Server Error", e.message);
 	}
 }
+
+exports.assignToWorkspace = async (req, res) => {
+	try {
+		if (!req.body.UUID_RD || !req.body.UUID_WD) {
+			return badRequestResponse(res, "Please fill all required fields!");
+		}
+
+		await prisma.resultData.update({
+			data: {
+				UUID_WD: req.body.UUID_WD,
+				UpdatedAt_WD: getLocalTime(new Date()),
+			}, 
+			where: {
+				UUID_RD: req.body.UUID_RD,
+			}
+		})
+	}
+}

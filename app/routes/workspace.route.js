@@ -22,4 +22,6 @@ router.delete("/workspace-management/delete/one/:id", authenticateToken, workspa
 
 router.delete("/workspace-management/delete/by-user", authenticateToken, workspace_controllers.deleteByUser);
 
+router.post("/workspace-management/assign", authenticateToken, workspace_controllers.assignToWorkspace);
+
 module.exports = router;

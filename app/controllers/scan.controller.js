@@ -55,14 +55,12 @@ exports.getScan = async (req, res) => {
          return badRequestResponse(res, "No matching resultIndex found!");
       }
 
-      // Initialize response components
       let socialData = [];
       let soilData = null;
       let palmData = null;
       let transmittanData = null;
       let gelombangData = null;
 
-      // Check UUID_RI before querying social data
       if (resultData.UUID_RI) {
          socialData = await prisma.socialResultIndex.findMany({
             where: {
@@ -71,7 +69,6 @@ exports.getScan = async (req, res) => {
          });
       }
 
-      // Check UUID_SORI before querying soil data
       if (resultData.UUID_SORI) {
          soilData = await prisma.soilResultIndex.findFirst({
             where: {
@@ -80,7 +77,6 @@ exports.getScan = async (req, res) => {
          });
       }
 
-      // Check UUID_PRI before querying palm data
       if (resultData.UUID_PRI) {
          palmData = await prisma.palmResultIndex.findFirst({
             where: {
@@ -89,7 +85,6 @@ exports.getScan = async (req, res) => {
          });
       }
 
-      // Check UUID_TRI before querying transmittan data
       if (resultData.UUID_TRI) {
          transmittanData = await prisma.transmittanResultIndex.findFirst({
             where: {
@@ -98,7 +93,6 @@ exports.getScan = async (req, res) => {
          });
       }
 
-      // Check UUID_GRI before querying gelombang data
       if (resultData.UUID_GRI) {
          gelombangData = await prisma.gelombangResultIndex.findFirst({
             where: {
@@ -107,8 +101,13 @@ exports.getScan = async (req, res) => {
          });
       }
 
+      const resultDataID = uuidv4();
+
       const response = {
          data: [
+            {
+               resultID: resultDataID, 
+            },
             {
                sample: featureClass,
                socialData: socialData.map((social) => ({
@@ -170,6 +169,7 @@ exports.getScan = async (req, res) => {
 
       await prisma.resultData.create({
          data: {
+            UUID_RD: resultDataID,
             UUID_MD: model_id,
             Photo_RD: fileUrl,
             UUID_RI: resultData.UUID_RI,
@@ -177,7 +177,7 @@ exports.getScan = async (req, res) => {
          },
       });
 
-      return successResponse(res, "Scan completed successfully!", response);
+      return successResponse(res, "Scan completed successfully!",  response);
    } catch (error) {
       console.error("Error during scan:", error);
       return badRequestResponse(res, "Internal Server Error", error.message);
