@@ -154,14 +154,18 @@ exports.assignToWorkspace = async (req, res) => {
 		}
 
 		await prisma.resultData.update({
+			where: {
+				UUID_RD: req.body.UUID_RD,
+			},
 			data: {
 				UUID_WD: req.body.UUID_WD,
 				UpdatedAt_WD: getLocalTime(new Date()),
 			}, 
-			where: {
-				UUID_RD: req.body.UUID_RD,
-			}
-		})
+		});
+
+		return successResponse(res, "Successfully saved the result data to workspace");
+
+
 	} catch(e) {
 		return badRequestResponse(res, "Internal Server Error");
 	}
