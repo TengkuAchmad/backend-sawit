@@ -162,5 +162,7 @@ exports.assignToWorkspace = async (req, res) => {
 				UUID_RD: req.body.UUID_RD,
 			}
 		})
+	} catch(e) {
+		return badRequestResponse(res, "Internal Server Error");
 	}
 }
