@@ -149,24 +149,28 @@ exports.deleteByUser = async (req, res) => {
 
 exports.assignToWorkspace = async (req, res) => {
 	try {
-		if (!req.body.UUID_RD || !req.body.UUID_WD) {
-			return badRequestResponse(res, "Please fill all required fields!");
-		}
-
-		await prisma.resultData.update({
-			where: {
-				UUID_RD: req.body.UUID_RD,
+	  const { UUID_RD, UUID_WD } = req.body;
+  
+	  if (!UUID_RD || !UUID_WD) {
+		return badRequestResponse(res, "Please fill all required fields!");
+	  }
+	  await prisma.resultData.update({
+		where: { UUID_RD: req.body.UUID_RD },
+		data: {
+		  WorkspaceData: {
+			connect: {
+			  UUID_WD: req.body.UUID_WD,
 			},
-			data: {
-				UUID_WD: req.body.UUID_WD,
-				UpdatedAt_WD: getLocalTime(new Date()),
-			}, 
-		});
-
-		return successResponse(res, "Successfully saved the result data to workspace");
-
-
-	} catch(e) {
-		return badRequestResponse(res, "Internal Server Error");
+		  },
+		},
+	  });
+	  
+	
+	  return successResponse(res, "Successfully saved the result data to workspace.");
+	  
+	} catch (e) {
+	  console.error("Error in assignToWorkspace:", e); // For debugging
+	  return badRequestResponse(res, "Internal Server Error", e.message);
 	}
-}
+  };
+  
