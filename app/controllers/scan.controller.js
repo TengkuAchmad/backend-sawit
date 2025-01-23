@@ -3,6 +3,7 @@ require('dotenv').config();
 
 // LIBRARIES
 const { PrismaClient } = require("@prisma/client");
+const { v4: uuidv4 } = require("uuid");
 
 // CONSTANTS
 const { successResponse } = require("../responses/responses.js");
