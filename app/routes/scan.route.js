@@ -9,6 +9,8 @@ const scan_controllers = require("../controllers/scan.controller.js");
 
 // ROUTES
 
-router.post("/scan-management/get/result", authenticateToken, scan_controllers.getScan);
+router.post("/scan-management/perform/rapid", authenticateToken, scan_controllers.performRapid);
+
+router.post("/scan-management/perform/lab", authenticateToken, scan_controllers.performLab);
 
 module.exports = router;

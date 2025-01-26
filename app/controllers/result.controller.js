@@ -143,7 +143,6 @@ exports.getAll = async (req, res) => {
 	}
 }
 
-
 exports.getAllNames = async (req, res) => {
 	try {
 		const data = await prisma.resultIndex.findMany({

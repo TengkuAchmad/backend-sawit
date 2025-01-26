@@ -38,8 +38,6 @@ model WorkspaceData {
   CreatedAt_WD DateTime     @default(now())
   ResultData   ResultData[]
   UserData     UserData     @relation(fields: [UUID_UD], references: [UUID_UD], onDelete: NoAction, onUpdate: NoAction)
-
-  @@index([UUID_UD], map: "WorkspaceData_UUID_UD_fkey")
 }
 
 model ModelData {
@@ -57,15 +55,12 @@ model ResultData {
   UUID_RD       String         @id @default(uuid())
   UUID_MD       String
   Photo_RD      String         @db.Text
+  Confidence_RD String?
   UUID_RI       String
   UUID_WD       String?
   ModelData     ModelData      @relation(fields: [UUID_MD], references: [UUID_MD], onDelete: NoAction, onUpdate: NoAction)
   ResultIndex   ResultIndex    @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
   WorkspaceData WorkspaceData? @relation(fields: [UUID_WD], references: [UUID_WD], onDelete: NoAction, onUpdate: NoAction)
-
-  @@index([UUID_MD], map: "ResultData_UUID_MD_fkey")
-  @@index([UUID_RI], map: "ResultData_UUID_RI_fkey")
-  @@index([UUID_WD], map: "ResultData_UUID_WD_fkey")
 }
 
 model ResultIndex {
@@ -83,11 +78,6 @@ model ResultIndex {
   SoilResultIndex        SoilResultIndex?        @relation(fields: [UUID_SORI], references: [UUID_SORI], onDelete: NoAction, onUpdate: NoAction)
   TransmittanResultIndex TransmittanResultIndex? @relation(fields: [UUID_TRI], references: [UUID_TRI], onDelete: NoAction, onUpdate: NoAction)
   SocialResultIndex      SocialResultIndex[]
-
-  @@index([UUID_GRI], map: "ResultIndex_UUID_GRI_fkey")
-  @@index([UUID_PRI], map: "ResultIndex_UUID_PRI_fkey")
-  @@index([UUID_SORI], map: "ResultIndex_UUID_SORI_fkey")
-  @@index([UUID_TRI], map: "ResultIndex_UUID_TRI_fkey")
 }
 
 model SocialResultIndex {
@@ -99,8 +89,6 @@ model SocialResultIndex {
   Umur_SRI      String
   UUID_RI       String?
   ResultIndex   ResultIndex? @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
-
-  @@index([UUID_RI], map: "SocialResultIndex_UUID_RI_fkey")
 }
 
 model SoilResultIndex {
