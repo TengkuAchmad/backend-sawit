@@ -27,13 +27,14 @@ exports.create = async (req, res) => {
          return badRequestResponse(res, "Please provide all the required fields!");
       }
 
-      const fileUrl = await file_services.upload("eseuramoe/models", "keras", model);
+      const files = await file_services.upload("iseuramoe", "models", "keras", model);
 
       await prisma.modelData.create({
          data: {
             Name_MD: name,
-            Url_MD: fileUrl,
+            Url_MD: files[0],
             Type_MD: type,
+            FileName_MD: files[1],
             UpdatedAt_MD: getLocalTime(new Date()),
             CreatedAt_MD: getLocalTime(new Date())
          }
@@ -53,6 +54,7 @@ exports.findAll = async (req, res) => {
             Name_MD: true,
             Url_MD: true,
             Type_MD: true,
+            FileName_MD: true,
             CreatedAt_MD: true,
             UpdatedAt_MD: true,
          }
@@ -77,6 +79,7 @@ exports.findOne = async (req, res) => {
             Name_MD: true,
             Url_MD: true,
             Type_MD: true,
+            FileName_MD: true,
             CreatedAt_MD: true,
             UpdatedAt_MD: true,
          }
@@ -110,12 +113,13 @@ exports.deleteAll = async (req, res) => {
    try {
       const fileDatas = await prisma.modelData.findMany({
          select: {
-            Url_MD: true,
+            FileName_MD: true,
          }
       });
 
-      for (let file_url of fileDatas) {
-         const isDeleted = await file_services.delete(file_url.Url_MD);
+      for (let files of fileDatas) {
+         console.log(files.FileName_MD);
+         const isDeleted = await file_services.delete('iseuramoe', "models", files.FileName_MD);
 
          if (!isDeleted) {
             return badRequestResponse(res, "Internal Server Error")
@@ -141,7 +145,7 @@ exports.deleteOne = async (req, res) => {
          }
       });
 
-      const isDeleted = await file_services.delete(modelData.Url_MD);
+      const isDeleted = await file_services.delete('iseuramoe', "models", modelData.FileName_MD);
       if (!isDeleted) {
          return badRequestResponse(res, "Internal Server Error");
       }

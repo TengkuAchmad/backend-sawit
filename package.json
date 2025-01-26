@@ -2,9 +2,9 @@
   "name": "sawitdetection",
   "version": "1.0.0",
   "description": "",
-  "main": "functions/api.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon functions/api.js",
+    "start": "nodemon server.js",
     "postinstall": "npx prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,20 +21,14 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-rate-limit": "^7.4.1",
-    "firebase": "^10.14.1",
-    "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.1.0",
-    "firebase-storage": "^1.1.4",
     "form-data": "^4.0.1",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
+    "minio": "^8.0.4",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "netlify-cli": "^17.37.2",
-    "netlify-lambda": "^2.0.16",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7",
-    "serverless-http": "^3.2.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

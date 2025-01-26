@@ -6,7 +6,6 @@ const { PrismaClient } = require("@prisma/client");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const argon2 = require("argon2");
-const { https } = require("firebase-functions/v2");
 const fs = require('fs');
 const path = require('path');
 
@@ -346,20 +345,20 @@ exports.updateOne = async (req, res) => {
          }
       });
 
-      const fileUrl = await file_services.upload("eseuramoe/avatars", "png", image);
+      const files = await file_services.upload("iseuramoe", "avatars", "png", image);
 
       await prisma.userData.update({
          where: {
             UUID_UD: id,
          }, data: {
             Name_UD: name,
-            PhotoUrl_UD: fileUrl,
+            PhotoUrl_UD: files[0],
             UpdatedAt_UD: getLocalTime(new Date()),
          }
       });
 
       if (userData.PhotoUrl_UD !== "example") {
-         await file_services.delete(userData.PhotoUrl_UD);
+         await file_services.delete("iseuramoe", "avatars", files[1]);
       }
 
       return successResponse(res, "User data updated successfully!");

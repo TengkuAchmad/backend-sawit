@@ -1,51 +1,60 @@
 // LIBRARIES
 const { v4: uuidv4 }       = require("uuid");
-const { getStorage, getStream }       = require("firebase/storage");
-const { ref }              = require("firebase/storage");
-const { deleteObject }     = require("firebase/storage");
-const { uploadBytes }      = require("firebase/storage");
-const { getDownloadURL }   = require("firebase/storage");
+const { minioClient }      = require("./minio.service");
 
 // ESSENTIALS
-exports.upload = async (category, type, file) => {
-   try {
-      if (!file?.length) {
-         throw new Error("Invalid file!");
-      }
+exports.upload = async (bucketName, folderName, type, file) => {
+    try {
+        if (!file?.length) {
+            throw new Error("Invalid file!");
+        }
 
-      const fileContent = file[0];
+        const fileContent = file[0];
+        const fileName = `${uuidv4()}.${type}`;
+        const fullPath = `${folderName}/${fileName}`;
 
-      const storage = getStorage();
+        const bucketExists = await minioClient.bucketExists(bucketName);
+        if (!bucketExists) {
+            await minioClient.makeBucket(bucketName, 'us-east-1');
 
-      const storageRef = ref(storage, `${category}/${uuidv4()}.${type}`);
+             const bucketPolicy = {
+                Version: "2012-10-17",
+                Statement: [
+                    {
+                        Effect: "Allow",
+                        Principal: "*",
+                        Action: ["s3:GetObject"],
+                        Resource: [`arn:aws:s3:::${bucketName}/*`],
+                    },
+                ],
+            };
 
-      const snapshot = await uploadBytes(storageRef, fileContent.buffer);
+            await minioClient.setBucketPolicy(bucketName, JSON.stringify(bucketPolicy));
+        }
 
-      const fileUrl = await getDownloadURL(snapshot.ref);
+        await minioClient.putObject(bucketName, fullPath, fileContent.buffer);
+        
+        const fileUrl = `http://${minioClient.host}:${minioClient.port}/${bucketName}/${fullPath}`;
+        
+        return [fileUrl, fileName];
 
-      return fileUrl;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
 
-   } catch (error) {
-      throw new Error(error.message)
-   }
-}
+exports.delete = async (bucketName, folderName, fileName) => {
+    try {
+        if (!fileName) {
+            throw new Error("Invalid file name");
+        }
 
-exports.delete = async (fileUrl) => {
-   try {
-       if (!fileUrl) {
-           throw new Error("Invalid file url")
-       }
-       const storage = getStorage()
-       const storageRef = ref(storage, `${fileUrl}`)
-       
-       deleteObject(storageRef).then(() => {
-           console.log("File deleted successfully")
-       }).catch((error) => {
-           console.log("Error deleting file:", error)
-       })
+        const fullPath = `${folderName}/${fileName}`;
 
-       return true
-   } catch (error) {
-       throw new Error(error.message)
-   }
-}
+        await minioClient.removeObject(bucketName, fullPath);
+        console.log("File deleted successfully");
+        return true;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};

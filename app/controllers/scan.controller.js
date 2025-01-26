@@ -168,13 +168,13 @@ exports.performRapid = async (req, res) => {
          },
       });
 
-      const fileUrl = await file_services.upload("eseuramoe/images", "png", target);
+      const files = await file_services.upload("iseuramoe", "captures", "png", target);
 
       await prisma.resultData.create({
          data: {
             UUID_RD: resultDataID,
             UUID_MD: model_id,
-            Photo_RD: fileUrl,
+            Photo_RD: files[0],
             Confidence_RD: engineResponse.data['result'][1],
             UUID_RI: resultData.UUID_RI,
             UUID_WD: null,
@@ -337,13 +337,13 @@ exports.performLab = async (req, res) => {
          },
       });
 
-      const fileUrl = await file_services.upload("eseuramoe/images", "png", target);
+      const files = await file_services.upload("iseuramoe", "captures", "png", target);
 
       await prisma.resultData.create({
          data: {
             UUID_RD: resultDataID,
             UUID_MD: model_id,
-            Photo_RD: fileUrl,
+            Photo_RD: files[0],
             Confidence_RD: engineResponse.data['result'][1],
             UUID_RI: resultData.UUID_RI,
             UUID_WD: null,
