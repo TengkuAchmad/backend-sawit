@@ -156,3 +156,23 @@ exports.getAllNames = async (req, res) => {
 		return badRequestResponse(res, "Internal Server Error", e.message);
 	}
 }
+
+exports.deleteOne = async (req, res) => {
+	try {
+		const { id } = req.body;
+
+		if (!id){
+			return badRequestResponse(res, "Please fill all required fields");
+		}
+
+		await prisma.resultData.delete({
+			where: {
+				UUID_RD: id
+			}
+		});
+
+		return successResponse(res, "Result deleted successfully!");
+	} catch (e) {
+		return badRequestResponse(res, "Internal Server Error", e.message);
+	}
+}

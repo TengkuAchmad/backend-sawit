@@ -14,4 +14,6 @@ router.get("/result-management/find/names", authenticateToken, result_controller
 
 router.post("/result-management/create", authenticateToken, result_controllers.create);
 
+router.delete("/result-management/delete/one", authenticateToken, result_controllers.deleteOne);
+
 module.exports = router;
