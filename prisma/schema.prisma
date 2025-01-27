@@ -57,6 +57,7 @@ model ResultData {
   UUID_RD       String         @id @default(uuid())
   UUID_MD       String
   Photo_RD      String         @db.Text
+  PhotoName_RD  String?
   Confidence_RD String?
   UUID_RI       String
   UUID_WD       String?

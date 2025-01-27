@@ -14,6 +14,7 @@ const prisma = new PrismaClient();
 
 // SERVICES
 const { getLocalTime } = require("../services/time.service.js");
+const file_services = require("../services/file.service");
 
 // ESSENTIALS FUNCTION
 exports.create = async (req, res) => {
@@ -164,12 +165,21 @@ exports.deleteOne = async (req, res) => {
 		if (!id){
 			return badRequestResponse(res, "Please fill all required fields");
 		}
+		
+		const resultDatas = await prisma.resultData.findFirst({
+			where:{
+				UUID_RD: id,
+			}
+		});
+
+		await file_services.delete("iseuramoe", "captures", resultDatas.PhotoName_RD);
 
 		await prisma.resultData.delete({
 			where: {
 				UUID_RD: id
 			}
 		});
+
 
 		return successResponse(res, "Result deleted successfully!");
 	} catch (e) {

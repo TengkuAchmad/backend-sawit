@@ -172,5 +172,5 @@ exports.assignToWorkspace = async (req, res) => {
 	  console.error("Error in assignToWorkspace:", e); // For debugging
 	  return badRequestResponse(res, "Internal Server Error", e.message);
 	}
-  };
+}
   
