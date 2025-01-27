@@ -118,7 +118,6 @@ exports.deleteAll = async (req, res) => {
       });
 
       for (let files of fileDatas) {
-         console.log(files.FileName_MD);
          const isDeleted = await file_services.delete('iseuramoe', "models", files.FileName_MD);
 
          if (!isDeleted) {

@@ -52,7 +52,7 @@ exports.delete = async (bucketName, folderName, fileName) => {
         const fullPath = `${folderName}/${fileName}`;
 
         await minioClient.removeObject(bucketName, fullPath);
-        console.log("File deleted successfully");
+        
         return true;
     } catch (error) {
         throw new Error(error.message);

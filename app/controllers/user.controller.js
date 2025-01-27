@@ -150,6 +150,7 @@ exports.getAll = async (req, res) => {
             Name_UD: true,
             Email_UD: true,
             PhotoUrl_UD: true,
+            PhotoName_UD: true,
             OTP_UD: true,
             LoggedAt_UD: true,
             UpdatedAt_UD: true,
@@ -176,6 +177,7 @@ exports.getOne = async (req, res) => {
             Email_UD: true,
             Role_UD: true,
             PhotoUrl_UD: true,
+            PhotoName_UD: true,
          }
       });
 
@@ -196,6 +198,7 @@ exports.getAllAdmin = async (req, res) => {
             Name_UD: true,
             Email_UD: true,
             PhotoUrl_UD: true,
+            PhotoName_UD: true,
             OTP_UD: true,
             LoggedAt_UD: true,
             UpdatedAt_UD: true,
@@ -223,6 +226,7 @@ exports.getOneAdmin = async (req, res) => {
             Email_UD: true,
             Role_UD: true,
             PhotoUrl_UD: true,
+            PhotoName_UD: true,
          }
       });
 
@@ -254,12 +258,38 @@ exports.getByEmail = async (req, res) => {
 
 exports.deleteAll = async (req, res) => {
    try {
+      const userDatas = await prisma.userData.findMany({
+         select : {
+            PhotoUrl_UD: true,
+            PhotoName_UD: true,
+         }, where : {
+            Role_UD: "USER"
+         }
+      });
+
+      for (let users of userDatas) {
+
+         if (users.PhotoUrl_UD != "default"){
+
+            const isDeleted = await file_services.delete("iseuramoe", "avatars", users.PhotoName_UD);
+
+            if (!isDeleted) {
+               return badRequestResponse(res, "Internal Server Error")
+            }
+
+         }
+
+      
+      }
+
       await prisma.workspaceData.deleteMany({});
+
       await prisma.userData.deleteMany({
          where: {
             Role_UD: "USER",
          }
       });
+
       return successResponse(res, "Deleted all user data!");
    } catch (error) {
       return badRequestResponse(res, "Internal Server Error", error.message);
@@ -269,6 +299,16 @@ exports.deleteAll = async (req, res) => {
 exports.deleteOne = async (req, res) => {
    try {
       const { id } = req.params;
+
+      const userDatas = await prisma.userData.findFirst({
+         where: {
+            UUID_UD: id,
+         }
+      });
+
+      if (userDatas.PhotoUrl_UD != 'default'){
+         await file_services.delete("iseuramoe", "avatars", userDatas.PhotoName_UD);
+      }
       
       await prisma.workspaceData.deleteMany({
          where: {
@@ -291,6 +331,29 @@ exports.deleteOne = async (req, res) => {
 
 exports.deleteAllAdmin = async (req, res) => {
    try {
+      const adminDatas = await prisma.userData.findMany({
+         select : {
+            PhotoUrl_UD: true,
+            PhotoName_UD: true,
+         }, where : {
+            Role_UD: "ADMIN"
+         }
+      });
+
+      for (let admins of adminDatas) {
+
+         if (admins.PhotoUrl_UD != 'default') {
+
+            const isDeleted = await file_services.delete('iseuramoe', "avatars", admins.PhotoName_UD);
+
+            if (!isDeleted) {
+               return badRequestResponse(res, "Internal Server Error")
+            }
+
+         }
+      
+      }
+
       await prisma.workspaceData.deleteMany({});
       await prisma.userData.deleteMany({
          where: {
@@ -303,10 +366,19 @@ exports.deleteAllAdmin = async (req, res) => {
    }
 }
 
-
 exports.deleteOneAdmin = async (req, res) => {
    try {
       const { id } = req.params;
+
+      const adminData = await prisma.userData.findFirst({
+         where: {
+            UUID_UD: id,
+         }
+      });
+
+      if (adminData.PhotoUrl_UD != 'default'){
+         await file_services.delete("iseuramoe", "avatars", adminData.PhotoName_UD);
+      }
       
       await prisma.workspaceData.deleteMany({
          where: {
@@ -345,6 +417,10 @@ exports.updateOne = async (req, res) => {
          }
       });
 
+      if (userData.PhotoUrl_UD != "default"){
+         await file_services.delete("iseuramoe", "avatars", userData.PhotoName_UD);
+      }
+
       const files = await file_services.upload("iseuramoe", "avatars", "png", image);
 
       await prisma.userData.update({
@@ -353,13 +429,10 @@ exports.updateOne = async (req, res) => {
          }, data: {
             Name_UD: name,
             PhotoUrl_UD: files[0],
+            PhotoName_UD: files[1],
             UpdatedAt_UD: getLocalTime(new Date()),
          }
       });
-
-      if (userData.PhotoUrl_UD !== "example") {
-         await file_services.delete("iseuramoe", "avatars", files[1]);
-      }
 
       return successResponse(res, "User data updated successfully!");
    } catch (error) {

@@ -17,6 +17,7 @@ model UserData {
   UpdatedAt_UD  DateTime        @default(now())
   CreatedAt_UD  DateTime        @default(now())
   PhotoUrl_UD   String          @db.Text
+  PhotoName_UD  String?
   OTP_UD        Int?
   WorkspaceData WorkspaceData[]
 }
