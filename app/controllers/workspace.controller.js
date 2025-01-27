@@ -167,21 +167,30 @@ exports.deleteByUser = async (req, res) => {
 	try {
 		const id = req.locals.user;
 
-		const resultsData = await prisma.resultData.findMany({
+		const workspacesData = await prisma.workspaceData.findMany({
 			where: {
-				UUID_UD: id,
+				UUID_UD: id
 			}
 		});
 
-		for (let resultItem of resultsData) {
-
-			await file_services.delete("iseuramoe", "captures", resultItem.PhotoName_RD);
-		
-			await prisma.resultData.delete({
+		for (let workspaces of workspacesData){
+			
+			const resultsData = await prisma.resultData.findMany({
 				where: {
-					UUID_RD: resultItem.UUID_RD
+					UUID_UD: workspaces.UUID_UD,
 				}
 			});
+
+			for (let resultItem of resultsData) {
+
+				await file_services.delete("iseuramoe", "captures", resultItem.PhotoName_RD);
+			
+				await prisma.resultData.delete({
+					where: {
+						UUID_RD: resultItem.UUID_RD
+					}
+				});
+			}
 		}
 
 		await prisma.workspaceData.deleteMany({
