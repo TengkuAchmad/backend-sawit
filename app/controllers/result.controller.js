@@ -159,7 +159,7 @@ exports.getAllNames = async (req, res) => {
 
 exports.deleteOne = async (req, res) => {
 	try {
-		const { id } = req.body;
+		const { id } = req.params;
 
 		if (!id){
 			return badRequestResponse(res, "Please fill all required fields");
