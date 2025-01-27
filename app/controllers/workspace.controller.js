@@ -15,6 +15,7 @@ const prisma               = new PrismaClient();
 // SERVICES
 const { getLocalTime }     = require("../services/time.service.js");
 const { parseTime } = require("../services/time.service");
+const file_services = require("../services/file.service");
 
 exports.create = async (req, res) => {
 	try {
@@ -107,6 +108,19 @@ exports.getByUser = async (req, res) => {
 
 exports.deleteAll = async (req, res) => {
 	try {
+		const resultsData = await prisma.resultData.findMany({});
+
+		for (let resultItem of resultsData) {
+
+			await file_services.delete("iseuramoe", "captures", resultItem.PhotoName_RD);
+		
+			await prisma.resultData.delete({
+				where: {
+					UUID_RD: resultItem.UUID_RD
+				}
+			});
+		}
+
 		await prisma.workspaceData.deleteMany({});
 
 		return successResponse(res, "All Workspace data deleted successfully!");
@@ -119,6 +133,23 @@ exports.deleteOne = async (req, res) => {
 	try {
 		const { id } = req.params;
 
+		const resultsData = await prisma.resultData.findMany({
+			where: {
+				UUID_WD: id,
+			}
+		});
+
+		for (let resultItem of resultsData) {
+
+			await file_services.delete("iseuramoe", "captures", resultItem.PhotoName_RD);
+		
+			await prisma.resultData.delete({
+				where: {
+					UUID_RD: resultItem.UUID_RD
+				}
+			});
+		}
+
 		await prisma.workspaceData.deleteMany({
 			where: {
 				UUID_WD: id,
@@ -126,6 +157,7 @@ exports.deleteOne = async (req, res) => {
 		});
 
 		return successResponse(res, "Workspace data deleted successfully!");
+
 	} catch (e) {
 		return badRequestResponse(res, "Internal Server Error", e.message);
 	}
@@ -134,6 +166,23 @@ exports.deleteOne = async (req, res) => {
 exports.deleteByUser = async (req, res) => {
 	try {
 		const id = req.locals.user;
+
+		const resultsData = await prisma.resultData.findMany({
+			where: {
+				UUID_UD: id,
+			}
+		});
+
+		for (let resultItem of resultsData) {
+
+			await file_services.delete("iseuramoe", "captures", resultItem.PhotoName_RD);
+		
+			await prisma.resultData.delete({
+				where: {
+					UUID_RD: resultItem.UUID_RD
+				}
+			});
+		}
 
 		await prisma.workspaceData.deleteMany({
 			where: {

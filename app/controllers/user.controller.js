@@ -278,8 +278,7 @@ exports.deleteAll = async (req, res) => {
             }
 
          }
-
-      
+   
       }
 
       await prisma.workspaceData.deleteMany({});
