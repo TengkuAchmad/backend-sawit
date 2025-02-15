@@ -72,11 +72,11 @@ exports.getResultData = async (req, res) => {
                 UUID_RI: true,
                 Photo_RD: true,
                 Confidence_RD: true,
+                CreatedAt_RD: true,
                 ModelData: {
                     select: {
                         Name_MD: true,
                         Type_MD: true,
-                        CreatedAt_MD: true,
                     }
                 },
                 ResultIndex: {
