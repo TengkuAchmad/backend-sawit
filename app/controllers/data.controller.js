@@ -79,6 +79,16 @@ exports.getResultData = async (req, res) => {
                         Type_MD: true,
                     }
                 },
+                WorkspaceData: {
+                    select: {
+                        Name_WD: true,
+                        UserData: {
+                            select: {
+                                Name_UD: true,
+                            }
+                        }
+                    }
+                },
                 ResultIndex: {
                     select: {
                         Title_RI: true,
