@@ -99,6 +99,8 @@ exports.register = async (req, res) => {
          }
       });
 
+      // TODO: AUTO CREATE DEFAULT WORKSPACE FOR USER
+
       return successResponse(res, "Successfully create an account!");
 
    } catch (e) {

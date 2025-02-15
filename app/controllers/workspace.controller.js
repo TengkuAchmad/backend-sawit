@@ -6,16 +6,16 @@ const { PrismaClient }     = require("@prisma/client");
 const { v4: uuidv4 }       = require("uuid");
 
 // CONSTANTS
-const { successResponse }  = require("../responses/responses.js");
-const { badRequestResponse}   = require("../responses/responses.js");
+const { successResponse }  	= require("../responses/responses.js");
+const { badRequestResponse }= require("../responses/responses.js");
 
 // PRISMA INSTANCE
-const prisma               = new PrismaClient();
+const prisma               	= new PrismaClient();
 
 // SERVICES
-const { getLocalTime }     = require("../services/time.service.js");
-const { parseTime } = require("../services/time.service");
-const file_services = require("../services/file.service");
+const { getLocalTime }     	= require("../services/time.service.js");
+const { parseTime } 		= require("../services/time.service.js");
+const file_services		 	= require("../services/file.service.js");
 
 exports.create = async (req, res) => {
 	try {
@@ -227,7 +227,6 @@ exports.assignToWorkspace = async (req, res) => {
 	  return successResponse(res, "Successfully saved the result data to workspace.");
 	  
 	} catch (e) {
-	  console.error("Error in assignToWorkspace:", e); // For debugging
 	  return badRequestResponse(res, "Internal Server Error", e.message);
 	}
 }
