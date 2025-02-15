@@ -179,6 +179,7 @@ exports.performRapid = async (req, res) => {
             Confidence_RD: engineResponse.data['result'][1],
             UUID_RI: resultData.UUID_RI,
             UUID_WD: null,
+            CreatedAt_RD: getLocalTime(new Date())
          },
       });
 
@@ -349,6 +350,7 @@ exports.performLab = async (req, res) => {
             Confidence_RD: engineResponse.data['result'][1],
             UUID_RI: resultData.UUID_RI,
             UUID_WD: null,
+            CreatedAt_RD: getLocalTime(new Date())
          },
       });
 

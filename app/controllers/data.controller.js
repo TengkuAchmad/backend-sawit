@@ -76,6 +76,7 @@ exports.getResultData = async (req, res) => {
                     select: {
                         Name_MD: true,
                         Type_MD: true,
+                        CreatedAt_MD: true,
                     }
                 },
                 ResultIndex: {

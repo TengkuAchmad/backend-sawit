@@ -64,6 +64,7 @@ model ResultData {
   ModelData     ModelData      @relation(fields: [UUID_MD], references: [UUID_MD], onDelete: NoAction, onUpdate: NoAction)
   ResultIndex   ResultIndex    @relation(fields: [UUID_RI], references: [UUID_RI], onDelete: NoAction, onUpdate: NoAction)
   WorkspaceData WorkspaceData? @relation(fields: [UUID_WD], references: [UUID_WD], onDelete: NoAction, onUpdate: NoAction)
+  CreatedAt_RD  DateTime       @default(now())
 }
 
 model ResultIndex {
