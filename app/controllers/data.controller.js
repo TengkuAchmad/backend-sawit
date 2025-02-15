@@ -74,7 +74,8 @@ exports.getResultData = async (req, res) => {
                 Confidence_RD: true,
                 ModelData: {
                     select: {
-                        Name_MD: true
+                        Name_MD: true,
+                        Type_MD: true,
                     }
                 },
                 ResultIndex: {
