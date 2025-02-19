@@ -87,8 +87,11 @@ exports.register = async (req, res) => {
 
       const hashedPassword = await argon2.hash(req.body.password);
 
+      const userID = uuidv4();
+
       await prisma.userData.create({
          data: {
+            UUID_UD: userID,
             Name_UD: req.body.name,
             Email_UD: req.body.email,
             Password_UD: hashedPassword,
@@ -99,7 +102,15 @@ exports.register = async (req, res) => {
          }
       });
 
-      // TODO: AUTO CREATE DEFAULT WORKSPACE FOR USER
+      await prisma.workspaceData.create({
+         data: {
+            UUID_WD: uuidv4(),
+            UUID_UD: userID,
+            Name_WD: "Example Workspace",
+            UpdatedAt_WD: getLocalTime(new Date()),
+            CreatedAt_WD: getLocalTime(new Date()),
+         }
+      })
 
       return successResponse(res, "Successfully create an account!");
 

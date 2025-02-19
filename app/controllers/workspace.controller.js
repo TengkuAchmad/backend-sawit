@@ -177,7 +177,7 @@ exports.deleteByUser = async (req, res) => {
 			
 			const resultsData = await prisma.resultData.findMany({
 				where: {
-					UUID_UD: workspaces.UUID_UD,
+					UUID_WD: workspaces.UUID_WD,
 				}
 			});
 
@@ -222,7 +222,13 @@ exports.assignToWorkspace = async (req, res) => {
 		  },
 		},
 	  });
-	  
+
+	  await prisma.workspaceData.update({
+		where: {
+			UUID_WD: req.body.UUID_WD,
+			UpdatedAt_WD: getLocalTime(new Date()),
+		}
+	  });
 	
 	  return successResponse(res, "Successfully saved the result data to workspace.");
 	  
