@@ -226,6 +226,8 @@ exports.assignToWorkspace = async (req, res) => {
 	  await prisma.workspaceData.update({
 		where: {
 			UUID_WD: req.body.UUID_WD,
+		},
+		data: {
 			UpdatedAt_WD: getLocalTime(new Date()),
 		}
 	  });
