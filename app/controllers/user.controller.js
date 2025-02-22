@@ -429,7 +429,7 @@ exports.updateOne = async (req, res) => {
          }
       });
 
-      if (userData.PhotoUrl_UD != "default"){
+      if (userData.PhotoUrl_UD !== "default" && !userData.PhotoUrl_UD.startsWith('https://lh3.googleusercontent.com')) {
          await file_services.delete("iseuramoe", "avatars", userData.PhotoName_UD);
       }
 
@@ -445,6 +445,7 @@ exports.updateOne = async (req, res) => {
             UpdatedAt_UD: getLocalTime(new Date()),
          }
       });
+
 
       return successResponse(res, "User data updated successfully!");
    } catch (error) {
